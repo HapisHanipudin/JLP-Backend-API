@@ -1,5 +1,5 @@
 import express from "express";
-import vendorRoute from "./routes/vendorRoute.js";
+import vendorRoute from "../routes/vendor.js";
 const app = express();
 const port = 3000;
 
