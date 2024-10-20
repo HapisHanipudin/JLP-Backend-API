@@ -28,3 +28,12 @@ export const getVendorByCategory = async (slug) => {
     },
   });
 };
+
+export const updateVendor = async (id, data) => {
+  return await prisma.vendor.update({
+    where: {
+      id,
+    },
+    data,
+  });
+};

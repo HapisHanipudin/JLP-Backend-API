@@ -79,4 +79,5 @@ model News {
   Author   User   @relation(fields: [AuthorId], references: [id])
   title    String
   content  String
+  createdAt DateTime @default(now())
 }
