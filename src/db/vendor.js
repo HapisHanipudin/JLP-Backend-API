@@ -9,3 +9,11 @@ export const createVendor = async (data) => {
 export const getVendors = async () => {
   return await prisma.vendor.findMany();
 };
+
+export const getVendorByID = async (id) => {
+  return await prisma.vendor.findUnique({
+    where: {
+      id,
+    }
+  })
+}

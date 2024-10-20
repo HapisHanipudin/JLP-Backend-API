@@ -1,4 +1,4 @@
-import { createVendor, getVendors } from "../db/vendor.js";
+import { createVendor, getVendors, getVendorByID } from "../db/vendor.js";
 
 const vendors = [
   {
@@ -24,8 +24,8 @@ export default {
     const newItem = await createVendor(req.body);
     res.json(newItem);
   },
-  getById: (req, res) => {
-    const result = vendors.find((item) => item.id == req.params.id);
+  getById: async (req, res) => {
+    const result = await getVendorByID(req.params.id);
     res.json(result);
   },
   uodate: (req, res) => {
