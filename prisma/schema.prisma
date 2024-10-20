@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id      Int      @id @default(autoincrement())
+  slug    String   @unique
+  display String
+  vendors Vendor[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String?
+  email        String   @unique
+  createdAt    DateTime @default(now())
+  password     String
+  profileImage String?
+  updatedAt    DateTime @updatedAt
+  username     String   @unique
+  vendorToken  String? // Menjadikan vendorToken opsional
+  vendor       Vendor?  @relation(fields: [vendorToken], references: [id])
+}
+
+model Vendor {
+  id          String         @id @default(uuid())
+  name        String
+  slug        String
+  categoryId  Int
+  description String
+  gmapsUrl    String
+  iconUrl     String
+  category    Category       @relation(fields: [categoryId], references: [id])
+  products    Product[]
+  banners     VendorBanner[]
+  contacts    Contact[]
+  User        User[]
+}
+
+model VendorBanner {
+  id       Int    @id @default(autoincrement())
+  vendorId String
+  imageUrl String
+  vendor   Vendor @relation(fields: [vendorId], references: [id])
+}
+
+model Product {
+  id       Int     @id @default(autoincrement())
+  name     String
+  imageUrl String
+  vendorId String
+  price    Int
+  vendor   Vendor? @relation(fields: [vendorId], references: [id])
+}
+
+model Contact {
+  id       Int    @id @default(autoincrement())
+  vendorId String
+  vendor   Vendor @relation(fields: [vendorId], references: [id])
+  type     String
+  info     String
+}
