@@ -1,3 +1,5 @@
+import { createVendor, getVendors } from "../db/vendor.js";
+
 const vendors = [
   {
     id: 1,
@@ -12,16 +14,15 @@ const vendors = [
 ];
 
 export default {
-  index: (req, res) => {
-    res.json(vendors);
+  index: async (req, res) => {
+    const vendorsss = await getVendors();
+    console.log(vendorsss);
+    res.send(vendorsss);
   },
-  create: (req, res) => {
-    const newItem = {
-      id: vendors.length + 1,
-      ...req.body,
-    };
-    vendors.push(newItem);
-    res.json(vendors);
+
+  create: async (req, res) => {
+    const newItem = await createVendor(req.body);
+    res.json(newItem);
   },
   getById: (req, res) => {
     const result = vendors.find((item) => item.id == req.params.id);
