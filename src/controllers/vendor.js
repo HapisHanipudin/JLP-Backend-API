@@ -1,4 +1,4 @@
-import { createVendor, getVendors, getVendorByID } from "../db/vendor.js";
+import { createVendor, getVendors, getVendorByID, getVendorByCategory } from "../db/vendor.js";
 
 const vendors = [
   {
@@ -37,5 +37,9 @@ export default {
     } else {
       res.errored;
     }
+  },
+  getByCategory: async (req, res) => {
+    const result = await getVendorByCategory(req.params.category);
+    res.json(result);
   },
 };

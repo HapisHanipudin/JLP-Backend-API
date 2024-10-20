@@ -31,6 +31,7 @@ model User {
   username     String   @unique
   vendorToken  String? // Menjadikan vendorToken opsional
   vendor       Vendor?  @relation(fields: [vendorToken], references: [id])
+  News         News[]
 }
 
 model Vendor {
@@ -70,4 +71,12 @@ model Contact {
   vendor   Vendor @relation(fields: [vendorId], references: [id])
   type     String
   info     String
+}
+
+model News {
+  id       Int    @id @default(autoincrement())
+  AuthorId String
+  Author   User   @relation(fields: [AuthorId], references: [id])
+  title    String
+  content  String
 }
