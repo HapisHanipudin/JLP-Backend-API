@@ -15,6 +15,11 @@ export const getVendorByID = async (id) => {
     where: {
       id,
     },
+    include: {
+      contacts: true,
+      products: true,
+      banners: true,
+    },
   });
 };
 

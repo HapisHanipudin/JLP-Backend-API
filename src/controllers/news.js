@@ -1,6 +1,7 @@
 import { createNews, getNews, getNewById } from "../db/news.js";
 import formidable from "formidable";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
+import { request } from "express";
 
 export default {
   index: async (req, res) => {
@@ -17,6 +18,8 @@ export default {
 
       const { title, content } = fields;
       const { image } = files;
+
+      const userId = req.auth.id;
 
       const slug = title[0]
         .toLocaleLowerCase()
