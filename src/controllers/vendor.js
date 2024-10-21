@@ -27,7 +27,7 @@ export default {
     const result = await getVendorByID(req.params.id);
     res.json(result);
   },
-  uodate: (req, res) => {
+  update: (req, res) => {
     const result = updateVendor(req.params.id, req.body);
     return result;
   },
