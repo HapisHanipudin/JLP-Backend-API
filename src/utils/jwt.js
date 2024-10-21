@@ -43,7 +43,7 @@ export const sendRefreshToken = (res, refreshToken) => {
     httpOnly: true, // Cookie hanya bisa diakses oleh server, bukan client-side scripts
     // sameSite: "strict", // Menghindari pengiriman cookie ke domain lain
     // secure: process.env.NODE_ENV === "production", // Cookie hanya dikirim melalui HTTPS jika di production
-    path: "/api/auth/refresh", // Pastikan token hanya bisa diakses pada endpoint ini
+    path: "/auth/refresh", // Pastikan token hanya bisa diakses pada endpoint ini
     maxAge: 14 * 24 * 60 * 60 * 1000, // 7 hari dalam milidetik
   });
 };
