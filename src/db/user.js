@@ -2,13 +2,13 @@ import prisma from "./index.js";
 import bcrypt from "bcrypt";
 
 export const createUser = async (data) => {
-  const finalData =  {
+  const finalData = {
     ...data,
-    password: bcrypt.hashSync(data.password, 10)
-  }
+    password: bcrypt.hashSync(data.password, 10),
+  };
 
   return await prisma.user.create({
-    data: finalData
+    data: finalData,
   });
 };
 
