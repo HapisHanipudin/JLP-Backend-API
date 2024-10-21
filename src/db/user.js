@@ -16,10 +16,10 @@ export const getUsers = async () => {
   return await prisma.user.findMany();
 };
 
-export const getUserByEmailOrUsername = async (input) => {
+export const getUserByUsername = async (username) => {
   return await prisma.user.findUnique({
     where: {
-      OR: [{ email: input }, { username: input }],
+        username
     },
   });
 };
