@@ -19,7 +19,7 @@ export const getUsers = async () => {
 export const getUserByUsername = async (username) => {
   return await prisma.user.findUnique({
     where: {
-        username
+      username,
     },
   });
 };
@@ -31,4 +31,8 @@ export const updateUser = async (id, data) => {
     },
     data,
   });
+};
+
+export const getUserById = (id) => {
+  return prisma.user.findUnique({ where: { id } });
 };

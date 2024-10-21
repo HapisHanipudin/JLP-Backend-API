@@ -1,7 +1,7 @@
-import { createRefreshToken } from "../db/refreshToken.js";
-import { createUser, getUsers, getUserByUsername, updateUser } from "../db/user.js";
+import { createRefreshToken, getRefreshTokenByToken } from "../db/refreshToken.js";
+import { createUser, getUsers, getUserByUsername, updateUser, getUserById } from "../db/user.js";
 import { userTransformer } from "../transformers/user.js";
-import { generateTokens, sendRefreshToken } from "../utils/jwt.js";
+import { decodeRefreshToken, generateTokens, sendRefreshToken } from "../utils/jwt.js";
 import bcrypt from "bcrypt";
 
 export default {
@@ -90,5 +90,37 @@ export default {
   update: async (req, res) => {
     const result = await updateUser(req.params.id, req.body);
     return result;
+  },
+  refreshToken: async (req, res) => {
+    const refreshToken = req.cookies.refresh_token;
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        statusCode: 401,
+        statusMessage: "Unauthorized",
+      });
+    }
+
+    const rToken = await getRefreshTokenByToken(refreshToken);
+
+    if (!rToken) {
+      return res.status(401).json({
+        statusCode: 401,
+        statusMessage: "Unauthorized",
+      });
+    }
+
+    const token = decodeRefreshToken(refreshToken);
+    try {
+      const user = await getUserById(token.userId);
+
+      const { accessToken } = generateTokens(user);
+      return res.json({ access_token: accessToken });
+    } catch (error) {
+      return res.status(500).json({
+        statusCode: 500,
+        statusMessage: "Something went wrong",
+      });
+    }
   },
 };

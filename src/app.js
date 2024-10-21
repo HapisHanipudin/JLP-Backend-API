@@ -1,10 +1,12 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import vendorRoute from "./routes/vendor.js";
 import newRoute from "./routes/news.js";
 import authRoute from "./routes/auth.js";
 const app = express();
 const port = 3000;
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
