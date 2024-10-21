@@ -1,7 +1,7 @@
-import { createRefreshToken } from '../db/refreshToken.js';
-import { createUser, getUsers, getUserByUsername, updateUser } from '../db/user.js'
-import { userTransformer } from '../transformers/user.js';
-import { generateTokens } from '../utils/jwt.js';
+import { createRefreshToken } from "../db/refreshToken.js";
+import { createUser, getUsers, getUserByUsername, updateUser } from "../db/user.js";
+import { userTransformer } from "../transformers/user.js";
+import { generateTokens, sendRefreshToken } from "../utils/jwt.js";
 import bcrypt from "bcrypt";
 
 export default {
@@ -44,7 +44,6 @@ export default {
         statusMessage: "Internal Server Error",
       });
     }
-
   },
   login: async (req, res) => {
     const { username, password } = req.body;
@@ -65,7 +64,7 @@ export default {
       });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password)
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
       return res.status(401).json({
@@ -74,18 +73,19 @@ export default {
       });
     }
 
-    const { accessToken, refreshToken } = generateTokens(user)
+    const { accessToken, refreshToken } = generateTokens(user);
 
     await createRefreshToken({
-        token: refreshToken,
-        userId: user.id,
-    })
+      token: refreshToken,
+      userId: user.id,
+    });
+
+    sendRefreshToken(res, refreshToken);
 
     res.json({
-        user: userTransformer(user),
-        access_token: accessToken
+      user: userTransformer(user),
+      access_token: accessToken,
     });
-    
   },
   update: async (req, res) => {
     const result = await updateUser(req.params.id, req.body);
