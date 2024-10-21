@@ -1,29 +1,35 @@
-import { createNews, getNews, getNewById } from "../db/news";
+import { createNews, getNews, getNewById } from "../db/news.js";
 import formidable from "formidable";
-import { cloudinaryUpload } from "../utils/cloudinary";
+import { cloudinaryUpload } from "../utils/cloudinary.js";
 
 export default {
   index: async (req, res) => {
     const news = await getNews();
     res.send(news);
   },
-  create: async (req, res) => {
-    const form = new formidable.IncomingForm();
-    form.parse(req, async (err, fields, files) => {
+  create: (req, res) => {
+    const form = formidable({ multiples: true });
+
+    form.parse(req, (err, fields, files) => {
       if (err) {
-        return res.status(500).send("Error parsing the form");
+        res.status(500).send({ success: false, message: err.message });
       }
 
-      try {
-        const file = files.profileImage.path; // Ambil path file yang diunggah
-        const result = await cloudinaryUpload(file); // Unggah file ke Cloudinary
-        res.json({ success: true, url: result.secure_url }); // Kirim URL gambar yang diunggah ke klien
-      } catch (error) {
-        res.status(500).send(`Upload error: ${error.message}`);
-      }
+      const { title, content } = fields;
+      const { image } = files;
+
+      const slug = title[0]
+        .toLocaleLowerCase()
+        .replace(/[^a-z0-9]/g, "")
+        .replace(/\s/g, "-");
+      const data = {
+        title: title[0],
+        content: content[0],
+        slug,
+      };
+
+      res.json({ title, content, image: image.path });
     });
-    const newItem = await createNews(req.body);
-    res.json(newItem);
   },
   getById: async (req, res) => {
     const result = await getNewById(req.params.id);
