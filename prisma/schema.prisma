@@ -75,6 +75,7 @@ model Product {
   imageUrl String
   vendorId String
   price    Int
+  description String
   vendor   Vendor? @relation(fields: [vendorId], references: [id])
 }
 

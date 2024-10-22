@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import vendorRoute from "./routes/vendor.js";
 import newsRoute from "./routes/news.js";
 import authRoute from "./routes/auth.js";
+import productRoute from "./routes/product.js";
 import authMiddleware from "./middleware/auth.js";
 const app = express();
 const port = 3000;
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 app.use("/vendor", vendorRoute);
 app.use("/news", newsRoute);
 app.use("/auth", authRoute);
+app.use("/product", productRoute);
 
 app.listen(port, function () {
   console.log(`Server running on http://localhost:${port}`);
