@@ -32,8 +32,10 @@ export default {
       let postWithSameSlug = await getNewsbySlug(slug);
 
       while (postWithSameSlug) {
-        slug = `${slug}-${count}`;
-        postWithSameSlug = await getNewsbySlug(slug);
+        postWithSameSlug = await getNewsbySlug(`${slug}-${count}`);
+        if (!postWithSameSlug) {
+          slug = `${slug}-${count}`;
+        }
         count++;
       }
 

@@ -1,4 +1,4 @@
-import { createVendor, getVendors, getVendorByID, getVendorByCategory, updateVendor } from "../db/vendor.js";
+import { createVendor, getVendors, getVendorByID, getVendorByCategory, updateVendor, getVendorBySlug } from "../db/vendor.js";
 
 // const vendors = [
 //   {
@@ -20,7 +20,30 @@ export default {
   },
 
   create: async (req, res) => {
-    const newItem = await createVendor(req.body);
+    let slug = req.body.name
+      .toLocaleLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .replace(/\s/g, "-");
+
+    let count = 1;
+    let vendorWithSameSlug = await getVendorBySlug(slug);
+
+    while (vendorWithSameSlug) {
+      // console.log(`Slug with count: ${slug}-${count}`);
+      vendorWithSameSlug = await getVendorBySlug(`${slug}-${count}`);
+      if (!vendorWithSameSlug) {
+        slug = `${slug}-${count}`;
+      }
+      count++;
+    }
+    // console.log(`Slug: ${slug}`);
+
+    const data = {
+      ...req.body,
+      slug,
+    };
+
+    const newItem = await createVendor(data);
     res.json(newItem);
   },
   getById: async (req, res) => {

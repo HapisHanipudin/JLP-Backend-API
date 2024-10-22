@@ -24,6 +24,20 @@ export const getVendorByID = async (id) => {
   });
 };
 
+export const getVendorBySlug = async (slug) => {
+  return await prisma.vendor.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      contacts: true,
+      products: true,
+      banners: true,
+      reviews: true,
+    },
+  });
+};
+
 export const getVendorByCategory = async (slug) => {
   return await prisma.category.findUnique({
     where: {
