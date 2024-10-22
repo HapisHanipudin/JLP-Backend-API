@@ -19,6 +19,7 @@ export const getVendorByID = async (id) => {
       contacts: true,
       products: true,
       banners: true,
+      reviews: true,
     },
   });
 };

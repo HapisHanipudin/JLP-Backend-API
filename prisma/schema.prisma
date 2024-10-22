@@ -59,6 +59,7 @@ model Vendor {
   contacts    Contact[]
   User        User[]
   reviews Reviews[]
+  createdAt DateTime @default(now())
 }
 
 model VendorBanner {
@@ -104,4 +105,5 @@ model Reviews {
   comment String
   vendorId String
   vendor Vendor @relation(fields: [vendorId], references: [id])
+  createdAt DateTime @default(now())
 }
