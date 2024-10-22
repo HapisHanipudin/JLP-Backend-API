@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Category {
-  id      Int      @id @default(autoincrement())
+  id      String         @id @default(uuid())
   slug    String   @unique
   display String
   vendors Vendor[]
@@ -48,8 +48,8 @@ model RefreshToken {
 model Vendor {
   id          String         @id @default(uuid())
   name        String
-  slug        String
-  categoryId  Int
+  slug        String  @unique
+  categoryId  String
   description String
   gmapsUrl    String
   iconUrl     String
@@ -61,14 +61,14 @@ model Vendor {
 }
 
 model VendorBanner {
-  id       Int    @id @default(autoincrement())
+  id       String         @id @default(uuid())
   vendorId String
   imageUrl String
   vendor   Vendor @relation(fields: [vendorId], references: [id])
 }
 
 model Product {
-  id       Int     @id @default(autoincrement())
+  id       String         @id @default(uuid())
   name     String
   imageUrl String
   vendorId String
@@ -77,7 +77,7 @@ model Product {
 }
 
 model Contact {
-  id       Int    @id @default(autoincrement())
+  id       String         @id @default(uuid())
   vendorId String
   vendor   Vendor @relation(fields: [vendorId], references: [id])
   type     String
@@ -85,13 +85,13 @@ model Contact {
 }
 
 model News {
-  id       Int    @id @default(autoincrement())
+  id       String         @id @default(uuid())
   AuthorId String
   Author   User   @relation(fields: [AuthorId], references: [id])
   title    String
-  slug     String
+  slug     String @unique
   image_url    String
-  video_url    String
+  video_url    String?
   content  String
   createdAt DateTime @default(now())
 }

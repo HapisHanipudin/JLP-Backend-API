@@ -1,4 +1,4 @@
-import { createNews, getNews, getNewById } from "../db/news.js";
+import { createNews, getNews, getNewById, getNewsbySlug } from "../db/news.js";
 import formidable from "formidable";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 import { request } from "express";
@@ -22,20 +22,33 @@ export default {
       const userId = req.auth.id;
 
       const imageUpload = await cloudinaryUpload(image[0].filepath);
-      const videoUpload = await cloudinaryUpload(video[0].filepath);
 
-      const slug = title[0]
+      let slug = title[0]
         .toLocaleLowerCase()
-        .replace(/[^a-z0-9]/g, "")
+        .replace(/[^a-z0-9\s]/g, "")
         .replace(/\s/g, "-");
+
+      let count = 1;
+      let postWithSameSlug = await getNewsbySlug(slug);
+
+      while (postWithSameSlug) {
+        slug = `${slug}-${count}`;
+        postWithSameSlug = await getNewsbySlug(slug);
+        count++;
+      }
+
       const data = {
         title: title[0],
         content: content[0],
         slug,
-        authorId: userId,
-        image_url: imageUpload,
-        video_url: videoUpload,
+        AuthorId: userId,
+        image_url: imageUpload.secure_url,
       };
+
+      if (video) {
+        const videoUpload = await cloudinaryUpload(video[0].filepath);
+        data.video_url = videoUpload.secure_url;
+      }
 
       const post = await createNews(data);
 

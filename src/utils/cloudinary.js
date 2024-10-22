@@ -12,14 +12,15 @@ const cloudinary = () => {
 
 export const cloudinaryUpload = async (file) => {
   try {
-    const result = await cloudinary().uploader.upload(file, (error, result) => {
+    const result = await cloudinary().uploader.upload(file, { resource_type: "auto" }, (error, result) => {
       if (error) {
         return error;
       }
+      // console.log(result);
       return result;
     }); // Menggunakan async/await
     return result; // Mengembalikan hasil unggahan
   } catch (error) {
-    throw new Error(`Cloudinary upload failed: ${error.message}`); // Tangani error
+    console.log(`Cloudinary upload failed: ${error.message}`); // Tangani error
   }
 };
