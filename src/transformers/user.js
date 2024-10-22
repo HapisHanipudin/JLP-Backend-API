@@ -1,10 +1,19 @@
 export const userTransformer = (user) => {
-    return {
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        profileImage: user.profileImage,
-        handle: "@" + user.username,
-    }
+    const transformedUser = {
+    id: user.id,
+    name: user.name,
+    username: user.username,
+    email: user.email,
+    profileImage: user.profileImage,
+    handle: "@" + user.username,
+  };
+
+  
+    // Jika user memiliki vendorToken, tambahkan ke dalam object
+  if (user.vendorToken) {
+    transformedUser.vendorToken = user.vendorToken;
+  }
+
+  return transformedUser;
+
 }

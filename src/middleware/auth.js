@@ -4,11 +4,17 @@ import { getUserById } from "../db/user.js";
 import { userTransformer } from "../transformers/user.js";
 
 const authMiddleware = async (req, res, next) => {
-  const endpoints = ["/auth/user", "/news/post"];
+  const endpoints = [
+    { method: 'GET', endpoint: '/auth/user' },
+    { method: 'POST', endpoint: '/news' },
+    { method: 'POST', endpoint: '/product' },
+  ];
 
-  const isHandled = endpoints.some((endpoint) => {
+  const isHandled = endpoints.some(({ method, endpoint }) => {
     const pattern = new UrlPattern(endpoint);
-    return pattern.match(req.url); // Sesuaikan dengan Express (req.url)
+
+    // Cek apakah URL dan metode HTTP sesuai
+    return pattern.match(req.url) && req.method === method;
   });
 
   // Jika URL tidak sesuai dengan endpoint yang ditangani, lanjutkan tanpa autentikasi
