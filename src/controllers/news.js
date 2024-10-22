@@ -55,8 +55,8 @@ export default {
       res.json(post);
     });
   },
-  getById: async (req, res) => {
-    const result = await getNewById(req.params.id);
+  getBySlug: async (req, res) => {
+    const result = await getNewsbySlug(req.params.slug);
     res.json(result);
   },
   update: async (req, res) => {},

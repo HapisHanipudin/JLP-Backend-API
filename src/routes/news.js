@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.route("/").get(newsController.index);
 router.route("/post").post(newsController.create);
-router.route("/:id").get(newsController.getById).put(newsController.update);
+router.route("/:slug").get(newsController.getBySlug).put(newsController.update);
 
 export default router;
