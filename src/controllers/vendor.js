@@ -1,4 +1,7 @@
+import formidable from "formidable";
 import { createVendor, getVendors, getVendorByID, getVendorByCategory, updateVendor, getVendorBySlug } from "../db/vendor.js";
+import { cloudinaryUpload } from "../utils/cloudinary.js";
+import { updateUser } from "../db/user.js";
 
 // const vendors = [
 //   {
@@ -20,31 +23,55 @@ export default {
   },
 
   create: async (req, res) => {
-    let slug = req.body.name
-      .toLocaleLowerCase()
-      .replace(/[^a-z0-9\s]/g, "")
-      .replace(/\s/g, "-");
+    const form = formidable({ multiples: true });
 
-    let count = 1;
-    let vendorWithSameSlug = await getVendorBySlug(slug);
-
-    while (vendorWithSameSlug) {
-      // console.log(`Slug with count: ${slug}-${count}`);
-      vendorWithSameSlug = await getVendorBySlug(`${slug}-${count}`);
-      if (!vendorWithSameSlug) {
-        slug = `${slug}-${count}`;
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        res.status(500).send({ success: false, message: err.message });
       }
-      count++;
-    }
-    // console.log(`Slug: ${slug}`);
 
-    const data = {
-      ...req.body,
-      slug,
-    };
+      const { name, categoryId, description, gmapsUrl, workHours, address } = fields;
+      const { icon } = files;
 
-    const newItem = await createVendor(data);
-    res.json(newItem);
+      let slug = name[0]
+        .toLocaleLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .replace(/\s/g, "-");
+
+      let count = 1;
+      let vendorWithSameSlug = await getVendorBySlug(slug);
+
+      while (vendorWithSameSlug) {
+        // console.log(`Slug with count: ${slug}-${count}`);
+        vendorWithSameSlug = await getVendorBySlug(`${slug}-${count}`);
+        if (!vendorWithSameSlug) {
+          slug = `${slug}-${count}`;
+        }
+        count++;
+      }
+
+      const iconUrl = await cloudinaryUpload(icon[0].filepath);
+      // console.log(`Slug: ${slug}`);
+
+      const data = {
+        name: name[0],
+        categoryId: categoryId[0],
+        description: description[0],
+        workHours: workHours[0],
+        gmapsUrl: gmapsUrl[0],
+        address: address[0],
+        slug,
+        iconUrl: iconUrl.secure_url,
+      };
+
+      const newVendor = await createVendor(data);
+
+      const userId = req.auth.id;
+
+      await updateUser(userId, { vendorToken: newVendor.id });
+
+      res.json(newVendor);
+    });
   },
   getById: async (req, res) => {
     const result = await getVendorByID(req.params.id);

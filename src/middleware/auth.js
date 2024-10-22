@@ -5,9 +5,10 @@ import { userTransformer } from "../transformers/user.js";
 
 const authMiddleware = async (req, res, next) => {
   const endpoints = [
-    { method: 'GET', endpoint: '/auth/user' },
-    { method: 'POST', endpoint: '/news' },
-    { method: 'POST', endpoint: '/product' },
+    { method: "GET", endpoint: "/auth/user" },
+    { method: "POST", endpoint: "/news" },
+    { method: "POST", endpoint: "/product" },
+    { method: "POST", endpoint: "/vendor" },
   ];
 
   const isHandled = endpoints.some(({ method, endpoint }) => {

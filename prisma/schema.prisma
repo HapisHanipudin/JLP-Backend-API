@@ -50,6 +50,8 @@ model Vendor {
   name        String
   slug        String  @unique
   categoryId  String
+  address     String
+  workHours   String
   description String
   gmapsUrl    String
   iconUrl     String
