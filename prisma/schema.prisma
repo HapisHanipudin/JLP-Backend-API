@@ -58,6 +58,7 @@ model Vendor {
   banners     VendorBanner[]
   contacts    Contact[]
   User        User[]
+  reviews Reviews[]
 }
 
 model VendorBanner {
@@ -94,4 +95,13 @@ model News {
   video_url    String?
   content  String
   createdAt DateTime @default(now())
+}
+
+model Reviews {
+  id String @id @default(uuid())
+  stars Decimal
+  username String
+  comment String
+  vendorId String
+  vendor Vendor @relation(fields: [vendorId], references: [id])
 }
