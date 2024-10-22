@@ -8,18 +8,21 @@ export default {
     const news = await getNews();
     res.send(news);
   },
-  create: (req, res) => {
+  create: async (req, res) => {
     const form = formidable({ multiples: true });
 
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
       if (err) {
         res.status(500).send({ success: false, message: err.message });
       }
 
       const { title, content } = fields;
-      const { image } = files;
+      const { image, video } = files;
 
       const userId = req.auth.id;
+
+      const imageUpload = await cloudinaryUpload(image[0].filepath);
+      const videoUpload = await cloudinaryUpload(video[0].filepath);
 
       const slug = title[0]
         .toLocaleLowerCase()
@@ -29,9 +32,14 @@ export default {
         title: title[0],
         content: content[0],
         slug,
+        authorId: userId,
+        image_url: imageUpload,
+        video_url: videoUpload,
       };
 
-      res.json({ title, content, image: image.path });
+      const post = await createNews(data);
+
+      res.json(post);
     });
   },
   getById: async (req, res) => {

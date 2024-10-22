@@ -2,9 +2,9 @@ import { v2 as _cloudinary } from "cloudinary";
 
 const cloudinary = () => {
   _cloudinary.config({
-    cloud_name: process.env.cloudinaryCloudName,
-    api_key: process.env.cloudinaryApiKey,
-    api_secret: process.env.cloudinaryApiSecret,
+    cloud_name: process.env.CLOUDINARYCLOUDNAME,
+    api_key: process.env.CLOUDINARYAPIKEY,
+    api_secret: process.env.CLOUDINARYAPISECRET,
   });
 
   return _cloudinary;
@@ -12,7 +12,12 @@ const cloudinary = () => {
 
 export const cloudinaryUpload = async (file) => {
   try {
-    const result = await cloudinary().uploader.upload(file); // Menggunakan async/await
+    const result = await cloudinary().uploader.upload(file, (error, result) => {
+      if (error) {
+        return error;
+      }
+      return result;
+    }); // Menggunakan async/await
     return result; // Mengembalikan hasil unggahan
   } catch (error) {
     throw new Error(`Cloudinary upload failed: ${error.message}`); // Tangani error

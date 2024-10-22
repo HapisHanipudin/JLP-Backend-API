@@ -1,10 +1,10 @@
 import UrlPattern from "url-pattern";
-import { decodeAccessToken } from "../utils/jwt";
-import { getUserById } from "../db/users";
-import { userTransformer } from "../transformers/user";
+import { decodeAccessToken } from "../utils/jwt.js";
+import { getUserById } from "../db/user.js";
+import { userTransformer } from "../transformers/user.js";
 
 const authMiddleware = async (req, res, next) => {
-  const endpoints = ["/api/auth/user", "/api/user/post", "/api/post", "/api/post/:id"];
+  const endpoints = ["/auth/user", "/news/post"];
 
   const isHandled = endpoints.some((endpoint) => {
     const pattern = new UrlPattern(endpoint);

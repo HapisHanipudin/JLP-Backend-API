@@ -1,11 +1,13 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import vendorRoute from "./routes/vendor.js";
-import newRoute from "./routes/news.js";
+import newsRoute from "./routes/news.js";
 import authRoute from "./routes/auth.js";
+import authMiddleware from "./middleware/auth.js";
 const app = express();
 const port = 3000;
 
+app.use(authMiddleware);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/vendor", vendorRoute);
-app.use("/news", newRoute);
+app.use("/news", newsRoute);
 app.use("/auth", authRoute);
 
 app.listen(port, function () {

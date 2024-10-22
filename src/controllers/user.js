@@ -6,8 +6,7 @@ import bcrypt from "bcrypt";
 
 export default {
   index: async (req, res) => {
-    const users = await getUsers();
-    res.send(users);
+    res.send(req.auth);
   },
 
   register: async (req, res) => {
