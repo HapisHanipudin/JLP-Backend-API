@@ -17,7 +17,14 @@ export const getVendorByID = async (id) => {
     },
     include: {
       contacts: true,
-      products: true,
+      products: {
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          imageUrl: true,
+        },
+      },
       banners: true,
       reviews: true,
     },
