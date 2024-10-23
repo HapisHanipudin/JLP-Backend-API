@@ -1,5 +1,5 @@
 import { createRefreshToken, getRefreshTokenByToken } from "../db/refreshToken.js";
-import { createUser, getUsers, getUserByUsername, updateUser, getUserById } from "../db/user.js";
+import { createUser, getUsers, getUserByUsername, updateUser, getUserById, getUserByEmail } from "../db/user.js";
 import { userTransformer } from "../transformers/user.js";
 import { decodeRefreshToken, generateTokens, sendRefreshToken } from "../utils/jwt.js";
 import bcrypt from "bcrypt";
@@ -16,6 +16,16 @@ export default {
       return res.status(400).json({
         statusCode: 400,
         statusMessage: "Invalid Params",
+      });
+    }
+
+    const userByUsername = await getUserByUsername(username);
+    const userByEmail = await getUserByEmail(email);
+
+    if (userByEmail || userByUsername) {
+      return res.status(400).json({
+        statusCode: 400,
+        statusMessage: "Username or Email was not available",
       });
     }
 
@@ -38,6 +48,7 @@ export default {
       const newUser = await createUser(userData);
       res.json(userTransformer(newUser));
     } catch (error) {
+      console.log("> Error : " + error.message);
       res.status(500).json({
         statusCode: 500,
         statusMessage: "Internal Server Error",
