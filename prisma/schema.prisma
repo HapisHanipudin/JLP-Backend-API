@@ -14,26 +14,26 @@ datasource db {
 }
 
 model Category {
-  id      String         @id @default(uuid())
+  id      String   @id @default(uuid())
   slug    String   @unique
   display String
   vendors Vendor[]
 }
 
 model User {
-  id           String   @id @default(uuid())
+  id           String         @id @default(uuid())
   name         String?
-  email        String   @unique
-  createdAt    DateTime @default(now())
+  email        String         @unique
+  createdAt    DateTime       @default(now())
   password     String
   profileImage String?
-  updatedAt    DateTime @updatedAt
-  username     String   @unique
+  updatedAt    DateTime       @updatedAt
+  username     String         @unique
   vendorToken  String? // Menjadikan vendorToken opsional
-  vendor       Vendor?  @relation(fields: [vendorToken], references: [id])
+  vendor       Vendor?        @relation(fields: [vendorToken], references: [id])
   refreshToken RefreshToken[]
   News         News[]
-
+  userCart     Cart[]
 }
 
 model RefreshToken {
@@ -48,7 +48,7 @@ model RefreshToken {
 model Vendor {
   id          String         @id @default(uuid())
   name        String
-  slug        String  @unique
+  slug        String         @unique
   categoryId  String
   address     String
   workHours   String
@@ -60,29 +60,30 @@ model Vendor {
   banners     VendorBanner[]
   contacts    Contact[]
   User        User[]
-  reviews Reviews[]
-  createdAt DateTime @default(now())
+  reviews     Reviews[]
+  createdAt   DateTime       @default(now())
 }
 
 model VendorBanner {
-  id       String         @id @default(uuid())
+  id       String @id @default(uuid())
   vendorId String
   imageUrl String
   vendor   Vendor @relation(fields: [vendorId], references: [id])
 }
 
 model Product {
-  id       String         @id @default(uuid())
-  name     String
-  imageUrl String
-  vendorId String
-  price    Int
+  id          String  @id @default(uuid())
+  name        String
+  imageUrl    String
+  vendorId    String
+  price       Int
   description String
-  vendor   Vendor? @relation(fields: [vendorId], references: [id])
+  vendor      Vendor? @relation(fields: [vendorId], references: [id])
+  Cart        Cart[]
 }
 
 model Contact {
-  id       String         @id @default(uuid())
+  id       String @id @default(uuid())
   vendorId String
   vendor   Vendor @relation(fields: [vendorId], references: [id])
   type     String
@@ -90,23 +91,35 @@ model Contact {
 }
 
 model News {
-  id       String         @id @default(uuid())
-  AuthorId String
-  Author   User   @relation(fields: [AuthorId], references: [id])
-  title    String
-  slug     String @unique
-  image_url    String
-  video_url    String?
-  content  String
+  id        String   @id @default(uuid())
+  AuthorId  String
+  Author    User     @relation(fields: [AuthorId], references: [id])
+  title     String
+  slug      String   @unique
+  image_url String
+  video_url String?
+  content   String
   createdAt DateTime @default(now())
 }
 
 model Reviews {
-  id String @id @default(uuid())
-  stars Decimal
-  username String
-  comment String
-  vendorId String
-  vendor Vendor @relation(fields: [vendorId], references: [id])
+  id        String   @id @default(uuid())
+  stars     Decimal
+  username  String
+  comment   String
+  vendorId  String
+  vendor    Vendor   @relation(fields: [vendorId], references: [id])
   createdAt DateTime @default(now())
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  quantity  Int
+  note      String
+  owner     User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
