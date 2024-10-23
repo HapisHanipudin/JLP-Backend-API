@@ -79,12 +79,18 @@ export default {
       userId: user.id,
     });
 
-    sendRefreshToken(res, refreshToken);
-
-    res.json({
+    const result = {
       user: userTransformer(user),
       access_token: accessToken,
-    });
+    };
+
+    if (req.headers.user - agent == "jlp-app") {
+      result.refresh_token = refreshToken;
+    } else {
+      sendRefreshToken(res, refreshToken);
+    }
+
+    res.json(result);
   },
   update: async (req, res) => {
     const result = await updateUser(req.params.id, req.body);
