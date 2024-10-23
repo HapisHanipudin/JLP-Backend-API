@@ -9,3 +9,11 @@ export const createProduct = async (data) => {
     data,
   });
 };
+
+export const getProductById = async (id) => {
+  return await prisma.product.findUnique({
+    where: {
+      id,
+    },
+  });
+};

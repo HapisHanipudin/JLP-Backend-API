@@ -1,4 +1,4 @@
-import { getProducts, createProduct } from '../db/product.js';
+import { getProducts, createProduct, getProductById } from "../db/product.js";
 import formidable from "formidable";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 
@@ -14,7 +14,7 @@ export default {
       const { name, price, description } = fields;
       const { image } = files;
 
-      console.log(req.auth)
+      console.log(req.auth);
 
       const vendorId = req.auth.vendorToken;
 
@@ -33,7 +33,10 @@ export default {
       res.json(post);
     });
   },
+  getProductById: async (req, res) => {
+    const productId = req.params.id;
+    const product = await getProductById(productId);
 
-
-
+    res.json(product);
+  },
 };
