@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 
 const generateAccessToken = (user) => {
   return jwt.sign({ userId: user.id }, process.env.JWTACCESSSECRET, {
-    expiresIn: "10m",
+    expiresIn: "5d",
   });
 };
 
 const generateRefreshToken = (user) => {
   return jwt.sign({ userId: user.id }, process.env.JWTREFRESHSECRET, {
-    expiresIn: "4h",
+    expiresIn: "14d",
   });
 };
 
