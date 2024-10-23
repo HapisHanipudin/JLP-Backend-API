@@ -84,7 +84,7 @@ export default {
       access_token: accessToken,
     };
 
-    if (req.headers.user - agent == "jlp-app") {
+    if (req.headers["user-agent"] == "jlp-app") {
       result.refresh_token = refreshToken;
     } else {
       sendRefreshToken(res, refreshToken);
