@@ -9,6 +9,7 @@ const authMiddleware = async (req, res, next) => {
     { method: "POST", endpoint: "/news" },
     { method: "POST", endpoint: "/product" },
     { method: "POST", endpoint: "/vendor" },
+    { method: "POST", endpoint: "/review" },
   ];
 
   const isHandled = endpoints.some(({ method, endpoint }) => {

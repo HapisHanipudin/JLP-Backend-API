@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.route("/").get(vendorController.index).post(vendorController.create);
 
-router.route("/:id").get(vendorController.getById).put(vendorController.update);
+router.route("/:slug").get(vendorController.getBySlug).put(vendorController.update);
 router.route("/category/:category").get(vendorController.getByCategory);
 
 export default router;

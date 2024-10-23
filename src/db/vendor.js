@@ -10,12 +10,13 @@ export const getVendors = async () => {
   return await prisma.vendor.findMany();
 };
 
-export const getVendorByID = async (id) => {
+export const getVendorDetailBySlug = async (slug) => {
   return await prisma.vendor.findUnique({
     where: {
-      id,
+      slug,
     },
     include: {
+      category: true,
       contacts: true,
       products: {
         select: {
@@ -26,7 +27,11 @@ export const getVendorByID = async (id) => {
         },
       },
       banners: true,
-      reviews: true,
+      reviews: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 };

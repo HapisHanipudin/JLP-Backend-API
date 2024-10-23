@@ -1,7 +1,8 @@
 import formidable from "formidable";
-import { createVendor, getVendors, getVendorByID, getVendorByCategory, updateVendor, getVendorBySlug } from "../db/vendor.js";
+import { createVendor, getVendors, getVendorDetailBySlug, getVendorByCategory, updateVendor, getVendorBySlug } from "../db/vendor.js";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 import { updateUser } from "../db/user.js";
+import { vendorDetailTransformer } from "../transformers/vendor.js";
 
 // const vendors = [
 //   {
@@ -73,10 +74,11 @@ export default {
       res.json(newVendor);
     });
   },
-  getById: async (req, res) => {
-    const result = await getVendorByID(req.params.id);
-    res.json(result);
+  getBySlug: async (req, res) => {
+    const result = await getVendorDetailBySlug(req.params.slug);
+    res.json(vendorDetailTransformer(result));
   },
+
   update: (req, res) => {
     const result = updateVendor(req.params.id, req.body);
     return result;

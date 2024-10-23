@@ -6,6 +6,7 @@ import vendorRoute from "./routes/vendor.js";
 import newsRoute from "./routes/news.js";
 import authRoute from "./routes/auth.js";
 import productRoute from "./routes/product.js";
+import reviewRoute from "./routes/review.js";
 import devRoute from "./routes/dev.js";
 
 import os from "os";
@@ -39,6 +40,7 @@ app.use("/vendor", vendorRoute);
 app.use("/news", newsRoute);
 app.use("/auth", authRoute);
 app.use("/product", productRoute);
+app.use("/review", reviewRoute);
 app.use("/dev", devRoute);
 
 app.listen(port, "0.0.0.0", function () {
