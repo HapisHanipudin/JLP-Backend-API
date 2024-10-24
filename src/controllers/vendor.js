@@ -85,6 +85,9 @@ export default {
   },
   getByCategory: async (req, res) => {
     const result = await getVendorByCategory(req.params.category);
-    res.json(result);
+    const data = {
+      ...result,
+    };
+    res.json(data);
   },
 };

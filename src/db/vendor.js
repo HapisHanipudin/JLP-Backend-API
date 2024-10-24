@@ -41,12 +41,6 @@ export const getVendorBySlug = async (slug) => {
     where: {
       slug,
     },
-    include: {
-      contacts: true,
-      products: true,
-      banners: true,
-      reviews: true,
-    },
   });
 };
 

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -29,12 +23,12 @@ model User {
   profileImage String?
   updatedAt    DateTime       @updatedAt
   username     String         @unique
-  vendorToken  String? // Menjadikan vendorToken opsional
-  vendor       Vendor?        @relation(fields: [vendorToken], references: [id])
-  refreshToken RefreshToken[]
-  News         News[]
+  vendorToken  String?
   userCart     Cart[]
+  News         News[]
+  refreshToken RefreshToken[]
   comments     Reviews[]
+  vendor       Vendor?        @relation(fields: [vendorToken], references: [id])
 }
 
 model RefreshToken {
@@ -56,13 +50,13 @@ model Vendor {
   description String
   gmapsUrl    String
   iconUrl     String
-  category    Category       @relation(fields: [categoryId], references: [id])
-  products    Product[]
-  banners     VendorBanner[]
-  contacts    Contact[]
-  User        User[]
-  reviews     Reviews[]
   createdAt   DateTime       @default(now())
+  contacts    Contact[]
+  products    Product[]
+  reviews     Reviews[]
+  User        User[]
+  category    Category       @relation(fields: [categoryId], references: [id])
+  banners     VendorBanner[]
 }
 
 model VendorBanner {
@@ -73,55 +67,55 @@ model VendorBanner {
 }
 
 model Product {
-  id          String  @id @default(uuid())
+  id          String @id @default(uuid())
   name        String
   imageUrl    String
   vendorId    String
   price       Int
   description String
-  vendor      Vendor? @relation(fields: [vendorId], references: [id])
   Cart        Cart[]
+  vendor      Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
 }
 
 model Contact {
   id       String @id @default(uuid())
   vendorId String
-  vendor   Vendor @relation(fields: [vendorId], references: [id])
   type     String
   info     String
+  vendor   Vendor @relation(fields: [vendorId], references: [id])
 }
 
 model News {
   id        String   @id @default(uuid())
   AuthorId  String
-  Author    User     @relation(fields: [AuthorId], references: [id])
   title     String
   slug      String   @unique
   image_url String
   video_url String?
   content   String
   createdAt DateTime @default(now())
+  Author    User     @relation(fields: [AuthorId], references: [id])
 }
 
 model Reviews {
   id        String   @id @default(uuid())
   stars     Decimal
-  userId    String
   comment   String
   vendorId  String
-  user      User     @relation(fields: [userId], references: [id])
-  vendor    Vendor   @relation(fields: [vendorId], references: [id])
   createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  vendor    Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
 }
 
 model Cart {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   userId    String
   productId String
   quantity  Int
   note      String
-  owner     User    @relation(fields: [userId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  owner     User     @relation(fields: [userId], references: [id])
 }
