@@ -41,22 +41,23 @@ model RefreshToken {
 }
 
 model Vendor {
-  id          String         @id @default(uuid())
-  name        String
-  slug        String         @unique
-  categoryId  String
-  address     String
-  workHours   String
-  description String
-  gmapsUrl    String
-  iconUrl     String
-  createdAt   DateTime       @default(now())
-  contacts    Contact[]
-  products    Product[]
-  reviews     Reviews[]
-  User        User[]
-  category    Category       @relation(fields: [categoryId], references: [id])
-  banners     VendorBanner[]
+  id           String         @id @default(uuid())
+  name         String
+  slug         String         @unique
+  categoryId   String
+  address      String
+  openingHours String
+  closingHours String
+  description  String
+  gmapsUrl     String
+  iconUrl      String
+  createdAt    DateTime       @default(now())
+  contacts     Contact[]
+  products     Product[]
+  reviews      Reviews[]
+  User         User[]
+  category     Category       @relation(fields: [categoryId], references: [id])
+  banners      VendorBanner[]
 }
 
 model VendorBanner {
@@ -99,7 +100,7 @@ model News {
 
 model Reviews {
   id        String   @id @default(uuid())
-  stars     Decimal
+  rating    Int
   comment   String
   vendorId  String
   createdAt DateTime @default(now())

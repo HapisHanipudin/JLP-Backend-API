@@ -7,7 +7,12 @@ export const createVendor = async (data) => {
 };
 
 export const getVendors = async () => {
-  return await prisma.vendor.findMany();
+  return await prisma.vendor.findMany({
+    include: {
+      category: true,
+      reviews: true,
+    },
+  });
 };
 
 export const getVendorDetailBySlug = async (slug) => {
@@ -28,6 +33,7 @@ export const getVendorDetailBySlug = async (slug) => {
       },
       banners: true,
       reviews: {
+        take: 3,
         include: {
           user: true,
         },
@@ -50,7 +56,12 @@ export const getVendorByCategory = async (slug) => {
       slug,
     },
     include: {
-      vendors: true,
+      vendors: {
+        include: {
+          category: true,
+          reviews: true,
+        },
+      },
     },
   });
 };

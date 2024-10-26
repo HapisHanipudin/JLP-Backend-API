@@ -8,7 +8,7 @@ export default {
 
     form.parse(req, async (err, fields, files) => {
       if (err) {
-        res.status(500).send({ success: false, message: err.message });
+        return res.status(500).send({ success: false, message: err.message });
       }
 
       const { name, price, description } = fields;

@@ -2,7 +2,7 @@ import formidable from "formidable";
 import { createVendor, getVendors, getVendorDetailBySlug, getVendorByCategory, updateVendor, getVendorBySlug } from "../db/vendor.js";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 import { updateUser } from "../db/user.js";
-import { vendorDetailTransformer } from "../transformers/vendor.js";
+import { vendorDetailTransformer, vendorTransformer } from "../transformers/vendor.js";
 
 // const vendors = [
 //   {
@@ -20,7 +20,7 @@ import { vendorDetailTransformer } from "../transformers/vendor.js";
 export default {
   index: async (req, res) => {
     const vendors = await getVendors();
-    res.send(vendors);
+    res.send(vendors.map(vendorTransformer));
   },
 
   create: async (req, res) => {
@@ -85,8 +85,15 @@ export default {
   },
   getByCategory: async (req, res) => {
     const result = await getVendorByCategory(req.params.category);
+    if (!result) {
+      return res.status(404).json({
+        statusCode: 404,
+        statusMessage: "Data was not found",
+      });
+    }
     const data = {
       ...result,
+      vendors: result.vendors.map(vendorTransformer),
     };
     res.json(data);
   },
