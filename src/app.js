@@ -8,6 +8,7 @@ import authRoute from "./routes/auth.js";
 import productRoute from "./routes/product.js";
 import reviewRoute from "./routes/review.js";
 import devRoute from "./routes/dev.js";
+import paymentRoute from "./routes/payment.js";
 
 import os from "os";
 const app = express();
@@ -42,6 +43,9 @@ app.use("/auth", authRoute);
 app.use("/product", productRoute);
 app.use("/review", reviewRoute);
 app.use("/dev", devRoute);
+
+// Tambahkan route pembayaran
+app.use('/api/payment', paymentRoute);
 
 app.listen(port, "0.0.0.0", function () {
   console.log(`Server running on http://${ipAddress}:${port}`);
