@@ -28,6 +28,7 @@ model User {
   News         News[]
   refreshToken RefreshToken[]
   comments     Reviews[]
+  orders       Order[]
   vendor       Vendor?        @relation(fields: [vendorToken], references: [id])
 }
 
@@ -75,6 +76,7 @@ model Product {
   price       Int
   description String
   Cart        Cart[]
+  order OrderItem[]
   vendor      Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
 }
 
@@ -119,4 +121,35 @@ model Cart {
   updatedAt DateTime @updatedAt
   product   Product  @relation(fields: [productId], references: [id])
   owner     User     @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id String @id @default(uuid())
+  userId String
+  status  orderStatus
+  totalAmount Int
+  paymentUrl String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner User @relation(fields: [userId], references: [id])
+  items OrderItem[]
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+  orderId String
+  productId String
+  quantity Int
+  price Int
+  totalPrice Int
+  order Order @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+enum orderStatus {
+  PENDING
+  PAID
+  PROCESS
+  COMPLETED
+  CANCELLED
 }
