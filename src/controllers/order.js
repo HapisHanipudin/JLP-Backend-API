@@ -1,5 +1,5 @@
 import { getCartByID } from "../db/cart.js";
-import { createOrder, createOrderItem } from "../db/order.js";
+import { createOrder, createOrderItem, updateOrder } from "../db/order.js";
 
 export default {
   post: async (req, res) => {
@@ -8,7 +8,7 @@ export default {
     let totalPrice = 0;
 
     cartIds.forEach(async (cartId) => {
-      const cart = await getCartByID(id);
+      const cart = await getCartByID(cartId);
       totalPrice += cart.product.price * cart.quantity;
       items.push(cart);
     });
@@ -47,6 +47,10 @@ export default {
     try {
       // Buat transaction token menggunakan Snap
       const transaction = await snap.createTransaction(parameter);
+      await updateOrder(order.id, {
+        paymentUrl: transaction.redirect_url,
+      });
+
       res.json({
         token: transaction.token,
         redirect_url: transaction.redirect_url,
