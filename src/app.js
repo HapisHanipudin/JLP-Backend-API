@@ -10,6 +10,7 @@ import reviewRoute from "./routes/review.js";
 import devRoute from "./routes/dev.js";
 import paymentRoute from "./routes/payment.js";
 import orderRoute from "./routes/order.js";
+import cartRoute from "./routes/cart.js";
 
 import os from "os";
 const app = express();
@@ -44,6 +45,7 @@ app.use("/auth", authRoute);
 app.use("/product", productRoute);
 app.use("/review", reviewRoute);
 app.use("/order", orderRoute);
+app.use("/cart", cartRoute);
 app.use("/dev", devRoute);
 
 // Tambahkan route pembayaran

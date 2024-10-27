@@ -7,13 +7,15 @@ export default {
 
     const { productIds } = req.body;
 
-    productIds.forEach(async (productId) => {
-      const cart = await createCart({
-        userId,
-        productId,
-      });
-      carts.push(cart);
-    });
+    await Promise.all(
+      productIds.map(async (productId) => {
+        const cart = await createCart({
+          userId,
+          productId,
+        });
+        carts.push(cart);
+      })
+    );
 
     res.json(carts);
   },

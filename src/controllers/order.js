@@ -7,11 +7,13 @@ export default {
     const items = [];
     let totalPrice = 0;
 
-    cartIds.forEach(async (cartId) => {
-      const cart = await getCartByID(cartId);
-      totalPrice += cart.product.price * cart.quantity;
-      items.push(cart);
-    });
+    await Promise.all(
+      cartIds.forEach(async (cartId) => {
+        const cart = await getCartByID(cartId);
+        totalPrice += cart.product.price * cart.quantity;
+        items.push(cart);
+      })
+    );
 
     const orderData = {
       userId: req.auth.id,
@@ -20,16 +22,18 @@ export default {
 
     const order = await createOrder(orderData);
 
-    items.forEach(async (item) => {
-      await createOrderItem({
-        orderId: order.id,
-        productId: item.productId,
-        quantity: item.quantity,
-        price: item.product.price,
-        totalPrice: item.product.price * item.quantity,
-        note: item.note,
-      });
-    });
+    await Promise.all(
+      items.forEach(async (item) => {
+        await createOrderItem({
+          orderId: order.id,
+          productId: item.productId,
+          quantity: item.quantity,
+          price: item.product.price,
+          totalPrice: item.product.price * item.quantity,
+          note: item.note,
+        });
+      })
+    );
 
     // Data parameter transaksi
     const parameter = {
