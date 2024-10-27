@@ -17,7 +17,6 @@ export default {
       const transaction = await snap.createTransaction(parameter);
       res.json({
         token: transaction.token,
-        redirect_url: transaction.redirect_url,
       });
     } catch (error) {
       console.error(error);
