@@ -3,6 +3,7 @@ import { createVendor, getVendors, getVendorDetailBySlug, getVendorByCategory, u
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 import { updateUser } from "../db/user.js";
 import { vendorDetailTransformer, vendorTransformer } from "../transformers/vendor.js";
+import { getCategory } from "../db/category.js";
 
 // const vendors = [
 //   {
@@ -31,8 +32,15 @@ export default {
         res.status(500).send({ success: false, message: err.message });
       }
 
-      const { name, categoryId, description, gmapsUrl, workHours, address } = fields;
+      const { name, categoryId, description, gmapsUrl, openingHours, closingHours, address } = fields;
       const { icon } = files;
+
+      if (!name || !categoryId || !description || !gmapsUrl || !openingHours || !closingHours || !address || !icon) {
+        return res.status(400).json({
+          statusCode: 400,
+          statusMessage: "Invalid Params",
+        });
+      }
 
       let slug = name[0]
         .toLocaleLowerCase()
@@ -58,7 +66,8 @@ export default {
         name: name[0],
         categoryId: categoryId[0],
         description: description[0],
-        workHours: workHours[0],
+        openingHours: openingHours[0],
+        closingHours: closingHours[0],
         gmapsUrl: gmapsUrl[0],
         address: address[0],
         slug,
@@ -84,6 +93,15 @@ export default {
     return result;
   },
   getByCategory: async (req, res) => {
+    const category = await getCategory(req.params.category);
+
+    if (!category) {
+      return res.status(404).json({
+        statusCode: 404,
+        statusMessage: "Category was not found",
+      });
+    }
+
     const result = await getVendorByCategory(req.params.category);
     if (!result) {
       return res.status(404).json({

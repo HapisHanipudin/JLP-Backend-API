@@ -69,15 +69,15 @@ model VendorBanner {
 }
 
 model Product {
-  id          String @id @default(uuid())
+  id          String      @id @default(uuid())
   name        String
   imageUrl    String
   vendorId    String
   price       Int
   description String
   Cart        Cart[]
-  order OrderItem[]
-  vendor      Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  order       OrderItem[]
+  vendor      Vendor      @relation(fields: [vendorId], references: [id], onDelete: Cascade)
 }
 
 model Contact {
@@ -115,8 +115,8 @@ model Cart {
   id        String   @id @default(uuid())
   userId    String
   productId String
-  quantity  Int
-  note      String
+  quantity  Int      @default(1)
+  note      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   product   Product  @relation(fields: [productId], references: [id])
@@ -124,26 +124,27 @@ model Cart {
 }
 
 model Order {
-  id String @id @default(uuid())
-  userId String
-  status  orderStatus
+  id          String      @id @default(dbgenerated("concat('ORDER-', nextval('order_seq'))"))
+  userId      String
+  status      orderStatus @default(PENDING)
   totalAmount Int
-  paymentUrl String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  owner User @relation(fields: [userId], references: [id])
-  items OrderItem[]
+  paymentUrl  String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  owner       User        @relation(fields: [userId], references: [id])
+  items       OrderItem[]
 }
 
 model OrderItem {
-  id String @id @default(uuid())
-  orderId String
-  productId String
-  quantity Int
-  price Int
+  id         String  @id @default(uuid())
+  orderId    String
+  productId  String
+  quantity   Int
+  price      Int
   totalPrice Int
-  order Order @relation(fields: [orderId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
+  note       String
+  order      Order   @relation(fields: [orderId], references: [id])
+  product    Product @relation(fields: [productId], references: [id])
 }
 
 enum orderStatus {

@@ -14,7 +14,12 @@ export default {
       const { name, price, description } = fields;
       const { image } = files;
 
-      console.log(req.auth);
+      if (!name || !price || !description || !image) {
+        return res.status(400).json({
+          statusCode: 400,
+          statusMessage: "Invalid Params",
+        });
+      }
 
       const vendorId = req.auth.vendorToken;
 
