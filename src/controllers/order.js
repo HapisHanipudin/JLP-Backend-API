@@ -67,6 +67,7 @@ export default {
       res.json({
         order: {
           ...order,
+          paymentUrl: transaction.redirect_url,
           items,
         },
         paymentInformation,

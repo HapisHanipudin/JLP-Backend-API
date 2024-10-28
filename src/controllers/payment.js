@@ -1,15 +1,22 @@
 import { snap } from "../utils/midtrans.js";
 export default {
   index: async (req, res) => {
-    const { orderId, grossAmount, customerDetails } = req.body;
+    const { id, productName, price, quantity } = req.body;
 
     // Data parameter transaksi
     const parameter = {
       transaction_details: {
-        order_id: orderId, // Harus unik setiap transaksi
-        gross_amount: grossAmount,
+        order_id: id, // Harus unik setiap transaksi
+        gross_amount: price * quantity,
       },
-      customer_details: customerDetails, // Nama, email, dll
+      item_details: [
+        {
+          id: "ITEM1",
+          price: price,
+          quantity: quantity,
+          name: productName,
+        },
+      ],
     };
 
     try {
@@ -17,10 +24,12 @@ export default {
       const transaction = await snap.createTransaction(parameter);
       res.json({
         token: transaction.token,
+        payment_url: transaction.redirect_url,
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: error.message });
+      return res.status(500).json({ error: error.message });
     }
   },
+  confirmation: async (req, res) => {},
 };
