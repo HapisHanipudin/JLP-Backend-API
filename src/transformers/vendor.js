@@ -11,12 +11,13 @@ export const vendorDetailTransformer = (data) => {
 };
 
 export const vendorTransformer = (data) => {
-  const rating = parseFloat((data.reviews.reduce((acc, curr) => acc + curr.rating, 0) / data.reviews.length).toFixed(2));
+  const rating = data.reviews.length > 0 ? parseFloat((data.reviews.reduce((acc, curr) => acc + curr.rating, 0) / data.reviews.length).toFixed(2)) : 0;
+
   return {
     id: data.id,
     slug: data.slug,
     name: data.name,
-    rating,
+    rating: rating === null ? 0 : rating,
     description: data.description,
     address: data.address,
     category: data.category,

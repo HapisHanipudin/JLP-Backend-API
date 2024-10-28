@@ -124,7 +124,7 @@ model Cart {
 }
 
 model Order {
-  id          String      @id @default(dbgenerated("concat('ORDER-', nextval('order_seq'))"))
+  id          String      @id @default(dbgenerated("concat('JLP-', LPAD(nextval('order_seq')::text, 4, '0'), '-', TO_CHAR(CURRENT_DATE, 'DDMMYYYY'))"))
   userId      String
   status      orderStatus @default(PENDING)
   totalAmount Int
@@ -142,10 +142,13 @@ model OrderItem {
   quantity   Int
   price      Int
   totalPrice Int
-  note       String
-  order      Order   @relation(fields: [orderId], references: [id])
+  note       String?
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product    Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
 }
+
 
 enum orderStatus {
   PENDING

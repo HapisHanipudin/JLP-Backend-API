@@ -12,5 +12,9 @@ export const getCartByID = async (id) => {
 };
 
 export const createCart = async (data) => {
-  return await prisma.cart.create({ data });
+  return await prisma.cart.create({ data, include: { product: true } });
+};
+
+export const deleteCart = async (id) => {
+  return await prisma.cart.delete({ where: { id } });
 };
