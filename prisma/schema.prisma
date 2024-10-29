@@ -26,9 +26,9 @@ model User {
   vendorToken  String?
   userCart     Cart[]
   News         News[]
+  orders       Order[]
   refreshToken RefreshToken[]
   comments     Reviews[]
-  orders       Order[]
   vendor       Vendor?        @relation(fields: [vendorToken], references: [id])
 }
 
@@ -124,7 +124,7 @@ model Cart {
 }
 
 model Order {
-  id          String      @id @default(dbgenerated("concat('JLP-', LPAD(nextval('order_seq')::text, 4, '0'), '-', TO_CHAR(CURRENT_DATE, 'DDMMYYYY'))"))
+  id          String      @id @default(dbgenerated("concat('JLP-', lpad((nextval('order_seq'::regclass))::text, 4, '0'::text), '-', to_char((CURRENT_DATE)::timestamp with time zone, 'DDMMYYYY'::text))"))
   userId      String
   status      orderStatus @default(PENDING)
   totalAmount Int
@@ -148,7 +148,6 @@ model OrderItem {
 
   @@index([orderId])
 }
-
 
 enum orderStatus {
   PENDING
