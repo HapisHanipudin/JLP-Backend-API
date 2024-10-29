@@ -56,7 +56,7 @@ On the App use "User-agent : jlp-app" in headers
 
 |Param|value|Type|
 |---|---|---|
-|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiNjczZmIyZS00NGE2LTQ0ZjUtYWRkZS04NmIwMmJjYzJkOGQiLCJpYXQiOjE3MzAxMjUwMDgsImV4cCI6MTczMDIxMTQwOH0.vpzplb8pSXsyqA_kesCZ1rBamLMGqzHm9rfoQZY3qkI|string|
+|token|<accesToken>|string|
 
 
 
@@ -146,7 +146,7 @@ To create the vendor**. (You need to be logged in**)
 
 |Param|value|Type|
 |---|---|---|
-|token|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0YzcxZDczNi05OGZjLTQwMmItYmQ3Zi0yYzJkNGNhZmVlMTciLCJpYXQiOjE3MzAwMTc0NDAsImV4cCI6MTczMDEwMzg0MH0.XcwBtl_4K00mF63ibZJzA7Z79_3XHFrxCtLQKrttl2s|string|
+|token|<accessToken>|string|
 
 
 
