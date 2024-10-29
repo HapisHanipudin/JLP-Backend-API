@@ -1,4 +1,4 @@
-import { createCart } from "../db/cart.js";
+import { createCart, getUserCart } from "../db/cart.js";
 
 export default {
   post: async (req, res) => {
@@ -26,5 +26,19 @@ export default {
     );
 
     res.json(carts);
+  },
+  getUserCart: async (req, res) => {
+    const userId = req.auth.id;
+
+    const userCart = await getUserCart(userId);
+
+    if (!userCart) {
+      return res.status(400).json({
+        statusCode: 400,
+        statusMessage: "User has no item in cart",
+      });
+    }
+
+    res.json(userCart);
   },
 };

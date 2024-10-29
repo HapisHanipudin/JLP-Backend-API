@@ -1,5 +1,5 @@
 import { deleteCart, getCartByID } from "../db/cart.js";
-import { createOrder, createOrderItem, updateOrder } from "../db/order.js";
+import { createOrder, createOrderItem, getUserOrder, getUserOrderByStatus, updateOrder } from "../db/order.js";
 import { snap } from "../utils/midtrans.js";
 
 export default {
@@ -76,5 +76,34 @@ export default {
       console.error(error);
       res.status(500).json({ error: error.message });
     }
+  },
+  getUserOrder: async (req, res) => {
+    const userId = req.auth.id;
+
+    const orders = await getUserOrder(userId);
+
+    if (!orders) {
+      return res.status(400).json({
+        statusCode: 400,
+        statusMessage: "User has no transaction history",
+      });
+    }
+
+    res.json(orders);
+  },
+  getUserOrderByStatus: async (req, res) => {
+    const userId = req.auth.id;
+    const status = req.params.status;
+
+    const orders = await getUserOrderByStatus(userId, status);
+
+    if (!orders) {
+      return res.status(400).json({
+        statusCode: 400,
+        statusMessage: "User has no transaction history",
+      });
+    }
+
+    res.json(orders);
   },
 };

@@ -18,3 +18,10 @@ export const createCart = async (data) => {
 export const deleteCart = async (id) => {
   return await prisma.cart.delete({ where: { id } });
 };
+
+export const getUserCart = async (userId) => {
+  return await prisma.cart.findMany({
+    where: { userId },
+    include: { product: true },
+  });
+};
