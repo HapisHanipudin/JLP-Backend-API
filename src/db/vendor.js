@@ -74,3 +74,38 @@ export const updateVendor = async (id, data) => {
     data,
   });
 };
+
+export const getVendorById = async (id) => {
+  return await prisma.vendor.findUnique({
+    where: {
+      id,
+    },
+  });
+};
+
+export const getVendorDetailById = async (id) => {
+  return await prisma.vendor.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      category: true,
+      contacts: true,
+      products: {
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          imageUrl: true,
+        },
+      },
+      banners: true,
+      reviews: {
+        take: 3,
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+};

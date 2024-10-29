@@ -1,9 +1,10 @@
 import formidable from "formidable";
-import { createVendor, getVendors, getVendorDetailBySlug, getVendorByCategory, updateVendor, getVendorBySlug } from "../db/vendor.js";
+import { createVendor, getVendors, getVendorDetailBySlug, getVendorByCategory, updateVendor, getVendorBySlug, getVendorById, getVendorDetailById } from "../db/vendor.js";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 import { updateUser } from "../db/user.js";
 import { vendorDetailTransformer, vendorTransformer } from "../transformers/vendor.js";
 import { getCategory } from "../db/category.js";
+import { getVendorProduct } from "../db/product.js";
 
 // const vendors = [
 //   {
@@ -89,6 +90,15 @@ export default {
   },
 
   update: (req, res) => {
+    const vendor = getVendorById(req.params.id);
+
+    if (!vendor) {
+      return res.status(404).json({
+        statusCode: 404,
+        statusMessage: "Vendor was not found",
+      });
+    }
+
     const result = updateVendor(req.params.id, req.body);
     return result;
   },
@@ -114,5 +124,26 @@ export default {
       vendors: result.vendors.map(vendorTransformer),
     };
     res.json(data);
+  },
+  getProducts: async (req, res) => {
+    const vendor = await getVendorBySlug(req.params.slug);
+    if (!vendor) {
+      return res.status(404).json({
+        statusCode: 404,
+        statusMessage: "Vendor was not found",
+      });
+    }
+    const result = await getVendorProduct(vendor.id);
+    res.json(result);
+  },
+  getVendorById: async (req, res) => {
+    const result = await getVendorDetailById(req.params.id);
+    if (!result) {
+      return res.status(404).json({
+        statusCode: 404,
+        statusMessage: "Vendor was not found",
+      });
+    }
+    res.json(vendorDetailTransformer(result));
   },
 };

@@ -17,3 +17,11 @@ export const getProductById = async (id) => {
     },
   });
 };
+
+export const getVendorProduct = async (vendorId) => {
+  return await prisma.product.findMany({
+    where: {
+      vendorId,
+    },
+  });
+};
