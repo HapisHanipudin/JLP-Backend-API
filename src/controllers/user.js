@@ -108,7 +108,13 @@ export default {
     return result;
   },
   refreshToken: async (req, res) => {
-    const refreshToken = req.cookies.refresh_token;
+    let refreshToken = null;
+    if (req.headers["user-agent"] == "jlp-app") {
+      const { refresh_token } = req.query;
+      refreshToken = refresh_token;
+    } else {
+      refreshToken = req.cookies.refresh_token;
+    }
 
     if (!refreshToken) {
       return res.status(401).json({

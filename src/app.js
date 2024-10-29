@@ -14,7 +14,7 @@ import cartRoute from "./routes/cart.js";
 
 import os from "os";
 const app = express();
-const port = 3000;
+const port = 8000;
 
 const getLocalIP = () => {
   const networkInterfaces = os.networkInterfaces();
