@@ -39,9 +39,9 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.use("/vendor", vendorRoute);
-app.use("/news", newsRoute);
 app.use("/auth", authRoute);
+app.use("/news", newsRoute);
+app.use("/vendor", vendorRoute);
 app.use("/product", productRoute);
 app.use("/review", reviewRoute);
 app.use("/order", orderRoute);
