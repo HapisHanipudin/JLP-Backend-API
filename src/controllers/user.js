@@ -145,4 +145,22 @@ export default {
       });
     }
   },
+  editProfile: async (req, res) => {
+    const user = req.auth;
+
+    const body = req.body;
+
+    const { id } = body;
+
+    if (id != user.id) {
+      return res.status(400).json({
+        statusCode: 400,
+        statusMessage: "Invalid Id",
+      });
+    }
+
+    const newUser = await updateUser(user.id, body);
+
+    res.json(userTransformer(newUser));
+  },
 };

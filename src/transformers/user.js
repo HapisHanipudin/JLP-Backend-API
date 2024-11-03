@@ -1,5 +1,5 @@
 export const userTransformer = (user) => {
-    const transformedUser = {
+  const transformedUser = {
     id: user.id,
     name: user.name,
     username: user.username,
@@ -8,12 +8,14 @@ export const userTransformer = (user) => {
     handle: "@" + user.username,
   };
 
-  
-    // Jika user memiliki vendorToken, tambahkan ke dalam object
+  // Jika user memiliki vendorToken, tambahkan ke dalam object
   if (user.vendorToken) {
     transformedUser.vendorToken = user.vendorToken;
   }
 
-  return transformedUser;
+  if (user.phone) {
+    transformedUser.phone = user.phone;
+  }
 
-}
+  return transformedUser;
+};

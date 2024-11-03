@@ -8,16 +8,19 @@ datasource db {
 }
 
 model Category {
-  id      String   @id @default(uuid())
-  slug    String   @unique
-  display String
-  vendors Vendor[]
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  display     String
+  bannerUrl   String
+  description String
+  vendors     Vendor[]
 }
 
 model User {
   id           String         @id @default(uuid())
   name         String?
   email        String         @unique
+  phone        Int?
   createdAt    DateTime       @default(now())
   password     String
   profileImage String?
