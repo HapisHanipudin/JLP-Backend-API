@@ -2,11 +2,12 @@ import { createNews, getNews, getNewById, getNewsbySlug } from "../db/news.js";
 import formidable from "formidable";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 import { request } from "express";
+import { newsTransformers } from "../transformers/news.js";
 
 export default {
   index: async (req, res) => {
     const news = await getNews();
-    res.send(news);
+    res.send(news.map(newsTransformers));
   },
   create: async (req, res) => {
     const form = formidable({ multiples: true });

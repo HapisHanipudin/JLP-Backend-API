@@ -1,14 +1,7 @@
 import prisma from "./index.js";
 
 export const getNews = async () => {
-  return await prisma.news.findMany({
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      image_url: true,
-    },
-  });
+  return await prisma.news.findMany();
 };
 
 export const createNews = async (data) => {

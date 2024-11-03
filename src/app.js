@@ -14,7 +14,7 @@ import cartRoute from "./routes/cart.js";
 
 import os from "os";
 const app = express();
-const port = 8000;
+const port = 80;
 
 const getLocalIP = () => {
   const networkInterfaces = os.networkInterfaces();
@@ -52,4 +52,3 @@ app.use("/dev", devRoute);
 app.use("/api/payment", paymentRoute);
 
 app.listen(port, "0.0.0.0", console.log(`Server running on Port ${port}`));
-
