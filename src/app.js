@@ -51,4 +51,5 @@ app.use("/dev", devRoute);
 // Tambahkan route pembayaran
 app.use("/api/payment", paymentRoute);
 
-app.listen(port, "0.0.0.0", console.log(`Server running on http://${ipAddress}:${port}`));
+app.listen(port, "0.0.0.0", console.log(`Server running on Port ${port}`));
+
