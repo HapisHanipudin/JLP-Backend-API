@@ -2,7 +2,7 @@ import { createNews, getNews, getNewById, getNewsbySlug } from "../db/news.js";
 import formidable from "formidable";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 import { request } from "express";
-import { newsTransformers } from "../transformers/news.js";
+import { newDetailTransformers, newsTransformers } from "../transformers/news.js";
 
 export default {
   index: async (req, res) => {
@@ -60,7 +60,7 @@ export default {
   },
   getBySlug: async (req, res) => {
     const result = await getNewsbySlug(req.params.slug);
-    res.json(result);
+    res.json(newDetailTransformers(result));
   },
   update: async (req, res) => {},
 };

@@ -12,3 +12,10 @@ export const newsTransformers = (data) => {
     },
   };
 };
+
+export const newDetailTransformers = (data) => {
+  return {
+    ...data,
+    ...newsTransformers(data),
+  };
+};
