@@ -103,6 +103,7 @@ export default {
     return result;
   },
   getByCategory: async (req, res) => {
+    console.log(req.params.category);
     const category = await getCategory(req.params.category);
 
     if (!category) {

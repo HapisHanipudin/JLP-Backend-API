@@ -39,9 +39,9 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.use("/vendor", vendorRoute);
-app.use("/news", newsRoute);
 app.use("/auth", authRoute);
+app.use("/news", newsRoute);
+app.use("/vendor", vendorRoute);
 app.use("/product", productRoute);
 app.use("/review", reviewRoute);
 app.use("/order", orderRoute);
@@ -51,6 +51,4 @@ app.use("/dev", devRoute);
 // Tambahkan route pembayaran
 app.use("/api/payment", paymentRoute);
 
-app.listen(port, "0.0.0.0", function () {
-  console.log(`Server running on http://${ipAddress}:${port}`);
-});
+app.listen(port, console.log(`Server running on Port ${port}`));
