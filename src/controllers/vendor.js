@@ -5,6 +5,8 @@ import { updateUser } from "../db/user.js";
 import { vendorDetailTransformer, vendorTransformer } from "../transformers/vendor.js";
 import { getCategory } from "../db/category.js";
 import { getVendorProduct } from "../db/product.js";
+import { getReviewByVendorId } from "../db/review.js";
+import { reviewTransformer } from "../transformers/review.js";
 
 // const vendors = [
 //   {
@@ -136,6 +138,17 @@ export default {
     }
     const result = await getVendorProduct(vendor.id);
     res.json(result);
+  },
+  getReviews: async (req, res) => {
+    const vendor = await getVendorBySlug(req.params.slug);
+    if (!vendor) {
+      return res.status(404).json({
+        statusCode: 404,
+        statusMessage: "Vendor was not found",
+      });
+    }
+    const result = await getReviewByVendorId(vendor.id);
+    res.json(result.map(reviewTransformer));
   },
   getVendorById: async (req, res) => {
     const result = await getVendorDetailById(req.params.id);
