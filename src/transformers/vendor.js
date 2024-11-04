@@ -37,7 +37,7 @@ export const vendorTransformer = (data) => {
     closingHours: data.closingHours,
     mapsUrl: data.gmapsUrl,
     icon: data.iconUrl,
-    reviews: reviewCounts,
+    reviewCounts: reviewCounts,
   };
 };
 
