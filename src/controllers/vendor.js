@@ -81,7 +81,7 @@ export default {
 
       const userId = req.auth.id;
 
-      await updateUser(userId, { vendorToken: newVendor.id });
+      await updateUser(userId, { vendorId: newVendor.id });
 
       res.json(newVendor);
     });
