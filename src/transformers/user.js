@@ -9,8 +9,8 @@ export const userTransformer = (user) => {
   };
 
   // Jika user memiliki vendorToken, tambahkan ke dalam object
-  if (user.vendorToken) {
-    transformedUser.vendorToken = user.vendorToken;
+  if (user.vendorId) {
+    transformedUser.vendorId = user.vendorId;
   }
 
   if (user.phone) {
