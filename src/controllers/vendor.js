@@ -151,23 +151,30 @@ export default {
     res.json(result.map(reviewTransformer));
   },
   postReview: async (req, res) => {
+    const { rating, comment } = req.body;
+
+    if (!rating || !comment) {
+      return res.status(400).json({
+        statusCode: 400,
+        statusMessage: "Invalid Params",
+      });
+    }
+
     const vendor = await getVendorBySlug(req.params.slug);
     if (!vendor) {
       return res.status(404).json({
         statusCode: 404,
-        statusMessage: "Mechant was not found",
-      });
-    }
-    const reviews = await getReviewByVendorId(vendor.id);
-
-    if (!reviews) {
-      res.status(404).json({
-        statusCode: 404,
-        statusMessage: "Mechant was not available",
+        statusMessage: "Vendor was not found",
       });
     }
 
-    res.json(reviews.map(reviewTransformer));
+    const result = await createReview({
+      ...req.body,
+      userId: req.auth.id,
+      vendorId: vendor.id,
+    });
+
+    res.json(result);
   },
   getVendorById: async (req, res) => {
     const result = await getVendorDetailById(req.params.id);
