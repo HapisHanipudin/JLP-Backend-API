@@ -59,7 +59,14 @@ export const getVendorByCategory = async (slug) => {
       vendors: {
         include: {
           category: true,
-          reviews: true,
+          reviews: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            include: {
+              user: true,
+            },
+          },
         },
       },
     },
