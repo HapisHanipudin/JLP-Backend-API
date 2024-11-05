@@ -5,7 +5,7 @@ import { updateUser } from "../db/user.js";
 import { vendorDetailTransformer, vendorTransformer } from "../transformers/vendor.js";
 import { getCategory } from "../db/category.js";
 import { getVendorProduct } from "../db/product.js";
-import { getReviewByVendorId } from "../db/review.js";
+import { createReview, getReviewByVendorId } from "../db/review.js";
 import { reviewTransformer } from "../transformers/review.js";
 
 // const vendors = [
@@ -174,7 +174,7 @@ export default {
       vendorId: vendor.id,
     });
 
-    res.json(result);
+    res.json(reviewTransformer(result));
   },
   getVendorById: async (req, res) => {
     const result = await getVendorDetailById(req.params.id);
