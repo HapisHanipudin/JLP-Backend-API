@@ -20,19 +20,19 @@ model User {
   id           String         @id @default(uuid())
   name         String?
   email        String         @unique
-  phone        Int?
   createdAt    DateTime       @default(now())
   password     String
   profileImage String?
   updatedAt    DateTime       @updatedAt
   username     String         @unique
-  vendorToken  String?
+  vendorId     String?
+  phone        Int?
   userCart     Cart[]
   News         News[]
   orders       Order[]
   refreshToken RefreshToken[]
   comments     Reviews[]
-  vendor       Vendor?        @relation(fields: [vendorToken], references: [id])
+  Vendor       Vendor?        @relation(fields: [vendorId], references: [id])
 }
 
 model RefreshToken {
