@@ -11,6 +11,9 @@ export const createReview = async (data) => {
 
 export const getReviewByVendorId = async (vendorId) => {
   return await prisma.reviews.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
     where: {
       vendorId,
     },
