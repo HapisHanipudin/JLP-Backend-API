@@ -7,15 +7,17 @@ const generateAccessToken = (user) => {
   });
 };
 
-const generateRefreshToken = (user) => {
-  return jwt.sign({ userId: user.id }, process.env.JWTREFRESHSECRET, {
-    expiresIn: "14d",
-  });
+const generateRefreshToken = (user, app) => {
+  const jwtConfig = {};
+  if (!app) {
+    jwtConfig.expiresIn = "14d";
+  }
+  return jwt.sign({ userId: user.id }, process.env.JWTREFRESHSECRET, jwtConfig);
 };
 
-export const generateTokens = (user) => {
+export const generateTokens = (user, app) => {
   const accessToken = generateAccessToken(user);
-  const refreshToken = generateRefreshToken(user);
+  const refreshToken = generateRefreshToken(user, app);
 
   return {
     accessToken,

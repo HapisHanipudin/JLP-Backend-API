@@ -83,7 +83,7 @@ export default {
       });
     }
 
-    const { accessToken, refreshToken } = generateTokens(user);
+    const { accessToken, refreshToken } = generateTokens(user, req.headers["user-agent"] == "jlp-app");
 
     await createRefreshToken({
       token: refreshToken,
