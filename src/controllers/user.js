@@ -107,8 +107,11 @@ export default {
     const { name, username, phone, password, confirmpassword } = req.body;
     const updatedUserData = {};
 
+    console.log(req.body);
+
     if (name) {
       updatedUserData.name = name;
+      console.log(name);
     }
     if (username) {
       const userWithUsername = await getUserByUsername(username);
@@ -134,7 +137,11 @@ export default {
     }
 
     const result = await updateUser(req.auth.id, updatedUserData);
-    return userTransformer(result);
+    console.log(result);
+    res.json({
+      user: userTransformer(result),
+      message: Object.keys(updatedUserData).join(", ") + " Updated",
+    });
   },
   refreshToken: async (req, res) => {
     let refreshToken = null;
