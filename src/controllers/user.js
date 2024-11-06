@@ -103,9 +103,38 @@ export default {
 
     res.json(result);
   },
-  update: async (req, res) => {
-    const result = await updateUser(req.params.id, req.body);
-    return result;
+  editProfile: async (req, res) => {
+    const { name, username, phone, password, confirmpassword } = req.body;
+    const updatedUserData = {};
+
+    if (name) {
+      updatedUserData.name = name;
+    }
+    if (username) {
+      const userWithUsername = await getUserByUsername(username);
+      if (userWithUsername) {
+        return res.status(400).json({
+          statusCode: 400,
+          statusMessage: "Username was not avalable!",
+        });
+      }
+      updatedUserData.username = username;
+    }
+    if (phone) {
+      updatedUserData.phone = phone;
+    }
+    if (password && confirmpassword) {
+      if (password !== confirmpassword) {
+        return res.status(400).json({
+          statusCode: 400,
+          statusMessage: "Password Does Not Match!",
+        });
+      }
+      updatedUserData.password = password;
+    }
+
+    const result = await updateUser(req.auth.id, updatedUserData);
+    return userTransformer(result);
   },
   refreshToken: async (req, res) => {
     let refreshToken = null;
@@ -144,23 +173,5 @@ export default {
         statusMessage: "Something went wrong",
       });
     }
-  },
-  editProfile: async (req, res) => {
-    const user = req.auth;
-
-    const body = req.body;
-
-    const { id } = body;
-
-    if (id != user.id) {
-      return res.status(400).json({
-        statusCode: 400,
-        statusMessage: "Invalid Id",
-      });
-    }
-
-    const newUser = await updateUser(user.id, body);
-
-    res.json(userTransformer(newUser));
   },
 };

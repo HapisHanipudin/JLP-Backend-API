@@ -33,11 +33,15 @@ export const getUserByEmail = async (email) => {
 };
 
 export const updateUser = async (id, data) => {
+  const finalData = data;
+  if (data.password) {
+    finalData.password = bcrypt.hashSync(data.password, 10);
+  }
   return await prisma.user.update({
     where: {
       id,
     },
-    data,
+    data: finalData,
   });
 };
 
