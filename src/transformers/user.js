@@ -1,5 +1,5 @@
 export const userTransformer = (user) => {
-  const transformedUser = {
+  return {
     id: user.id,
     name: user.name,
     username: user.username,
@@ -9,6 +9,4 @@ export const userTransformer = (user) => {
     handle: `@${user.username}`,
     vendorId: user.vendorId || null,
   };
-
-  return transformedUser;
 };
