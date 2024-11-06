@@ -1,6 +1,7 @@
 import { createCart, getUserCart } from "../db/cart.js";
 
 export default {
+  index: async (req, res) => {},
   post: async (req, res) => {
     const userId = req.auth.id;
     const carts = [];

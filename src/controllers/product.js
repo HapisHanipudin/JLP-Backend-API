@@ -3,6 +3,8 @@ import formidable from "formidable";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 
 export default {
+  index: async (req, res) => {},
+
   post: async (req, res) => {
     const form = formidable({ multiples: true });
 

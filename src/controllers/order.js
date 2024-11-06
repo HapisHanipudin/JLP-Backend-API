@@ -3,6 +3,8 @@ import { createOrder, createOrderItem, getUserOrder, getUserOrderByStatus, updat
 import { snap } from "../utils/midtrans.js";
 
 export default {
+  index: async (req, res) => {},
+
   post: async (req, res) => {
     try {
       const { cartIds } = req.body;

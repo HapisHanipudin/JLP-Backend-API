@@ -2,6 +2,8 @@ import { createReview, getReviewByVendorId } from "../db/review.js";
 import { reviewTransformer } from "../transformers/review.js";
 
 export default {
+  index: async (req, res) => {},
+
   post: async (req, res) => {
     const { rating, comment } = req.body;
 
