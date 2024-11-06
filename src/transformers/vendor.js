@@ -48,3 +48,13 @@ export const contactTransformer = (data) => {
     information: data.info,
   };
 };
+
+export const vendorDashboard = (vendor) => {
+  return {
+    ...vendorDetailTransformer(vendor),
+    NIK: vendor.NIK,
+    NPWP: vendor.NPWP,
+    BankCode: vendor.BankCode,
+    BankAccount: vendor.BankAccount,
+  };
+};

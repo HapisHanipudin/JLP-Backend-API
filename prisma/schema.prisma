@@ -55,6 +55,11 @@ model Vendor {
   description  String
   gmapsUrl     String
   iconUrl      String
+  NIK          Int?
+  NPWP         Int?
+  BankCode     Int?
+  BankAccount  Int?
+  updatedAt DateTime @updatedAt
   createdAt    DateTime       @default(now())
   contacts     Contact[]
   products     Product[]

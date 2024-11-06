@@ -4,18 +4,11 @@ export const userTransformer = (user) => {
     name: user.name,
     username: user.username,
     email: user.email,
+    phone: user.phone || null,
     profileImage: user.profileImage,
-    handle: "@" + user.username,
+    handle: `@${user.username}`,
+    vendorId: user.vendorId || null,
   };
-
-  // Jika user memiliki vendorToken, tambahkan ke dalam object
-  if (user.vendorId) {
-    transformedUser.vendorId = user.vendorId;
-  }
-
-  if (user.phone) {
-    transformedUser.phone = user.phone;
-  }
 
   return transformedUser;
 };
