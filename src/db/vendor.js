@@ -10,7 +10,11 @@ export const getVendors = async () => {
   return await prisma.vendor.findMany({
     include: {
       category: true,
-      reviews: true,
+      reviews: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 };
