@@ -107,15 +107,12 @@ export default {
     const { name, username, phone, password, confirmpassword } = req.body;
     const updatedUserData = {};
 
-    console.log(req.body);
-
     if (name) {
       updatedUserData.name = name;
-      console.log(name);
     }
     if (username) {
       const userWithUsername = await getUserByUsername(username);
-      if (userWithUsername) {
+      if (userWithUsername && userWithUsername.id !== req.auth.id) {
         return res.status(400).json({
           statusCode: 400,
           statusMessage: "Username was not avalable!",
@@ -137,10 +134,12 @@ export default {
     }
 
     const result = await updateUser(req.auth.id, updatedUserData);
-    console.log(result);
     res.json({
       user: userTransformer(result),
-      message: Object.keys(updatedUserData).join(", ").capitalize() + " Updated",
+      message:
+        Object.keys(updatedUserData)
+          .map((key) => key.charAt(0).toUpperCase() + key.slice(1))
+          .join(", ") + " Updated",
     });
   },
   refreshToken: async (req, res) => {
