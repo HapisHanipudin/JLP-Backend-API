@@ -140,7 +140,7 @@ export default {
     console.log(result);
     res.json({
       user: userTransformer(result),
-      message: Object.keys(updatedUserData).join(", ") + " Updated",
+      message: Object.keys(updatedUserData).join(", ").capitalize() + " Updated",
     });
   },
   refreshToken: async (req, res) => {

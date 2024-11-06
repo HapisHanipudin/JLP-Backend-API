@@ -3,14 +3,14 @@ import jwt from "jsonwebtoken";
 
 const generateAccessToken = (user) => {
   return jwt.sign({ userId: user.id }, process.env.JWTACCESSSECRET, {
-    expiresIn: "1d",
+    expiresIn: "1h",
   });
 };
 
 const generateRefreshToken = (user, app) => {
   const jwtConfig = {};
   if (!app) {
-    jwtConfig.expiresIn = "14d";
+    jwtConfig.expiresIn = "7d";
   }
   return jwt.sign({ userId: user.id }, process.env.JWTREFRESHSECRET, jwtConfig);
 };
