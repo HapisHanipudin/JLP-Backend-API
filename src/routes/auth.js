@@ -6,5 +6,6 @@ router.route("/register").post(userController.register);
 router.route("/login").post(userController.login);
 router.route("/refresh").get(userController.refreshToken);
 router.route("/user").get(userController.index).put(userController.editProfile);
+router.route("/user/profile").put(userController.profileImage);
 
 export default router;

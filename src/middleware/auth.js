@@ -7,6 +7,7 @@ const authMiddleware = async (req, res, next) => {
   const endpoints = [
     { method: "GET", endpoint: "/auth/user" },
     { method: "PUT", endpoint: "/auth/user" },
+    { method: "PUT", endpoint: "/auth/user/profile" },
     { method: "POST", endpoint: "/news" },
     { method: "POST", endpoint: "/product" },
     { method: "POST", endpoint: "/vendor" },

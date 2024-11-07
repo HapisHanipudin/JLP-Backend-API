@@ -1,14 +1,40 @@
+import formidable from "formidable";
 import { createRefreshToken, getRefreshTokenByToken } from "../db/refreshToken.js";
 import { createUser, getUsers, getUserByUsername, updateUser, getUserById, getUserByEmail } from "../db/user.js";
 import { userTransformer } from "../transformers/user.js";
 import { decodeRefreshToken, generateTokens, sendRefreshToken } from "../utils/jwt.js";
 import bcrypt from "bcrypt";
+import { cloudinaryUpload } from "../utils/cloudinary.js";
 
 export default {
   index: async (req, res) => {
     res.send(req.auth);
   },
+  profileImage: async (req, res) => {
+    const userId = req.auth.id;
 
+    const form = formidable({ multiples: true });
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        return res.status(500).send({ success: false, message: err.message });
+      }
+      const { image } = files;
+
+      if (!image) {
+        return res.status(400).json({
+          statusCode: 400,
+          statusMessage: "Invalid Params",
+        });
+      }
+      const imageUpload = await cloudinaryUpload(image[0].filepath);
+      const updatedUser = await updateUser(userId, { profileImage: imageUpload.secure_url });
+      return res.status(200).json({
+        user: userTransformer(updatedUser),
+        statusCode: 200,
+        statusMessage: "Success",
+      });
+    });
+  },
   register: async (req, res) => {
     const { username, name, email, password, confirmpassword } = req.body;
 
