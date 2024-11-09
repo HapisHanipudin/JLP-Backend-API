@@ -26,13 +26,20 @@ export default {
           statusMessage: "Invalid Params",
         });
       }
-      const imageUpload = await cloudinaryUpload(image[0].filepath);
-      const updatedUser = await updateUser(userId, { profileImage: imageUpload.secure_url });
-      return res.status(200).json({
-        user: userTransformer(updatedUser),
-        statusCode: 200,
-        statusMessage: "Success",
-      });
+      try {
+        const imageUpload = await cloudinaryUpload(image[0].filepath);
+        const updatedUser = await updateUser(userId, { profileImage: imageUpload.secure_url });
+        return res.status(200).json({
+          user: userTransformer(updatedUser),
+          statusCode: 200,
+          statusMessage: "Success",
+        });
+      } catch (error) {
+        return res.status(500).json({
+          statusCode: 500,
+          statusMessage: "Something went wrong",
+        });
+      }
     });
   },
   register: async (req, res) => {
