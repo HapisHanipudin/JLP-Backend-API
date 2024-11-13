@@ -157,6 +157,7 @@ model Order {
   status      orderStatus @default(PENDING)
   totalAmount Int
   paymentUrl  String?
+  snapToken   String?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   owner       User        @relation(fields: [userId], references: [id])
@@ -185,6 +186,7 @@ enum orderStatus {
   PROCESS
   COMPLETED
   CANCELLED
+  FAILED
 }
 
 enum ItemStatus {
@@ -194,6 +196,8 @@ enum ItemStatus {
   SENT
   REJECTED
   COMPLETED
+  CANCELLED
+  FAILED
 }
 
 model ProfitSplit {

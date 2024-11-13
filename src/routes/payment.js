@@ -4,6 +4,6 @@ import paymentController from "../controllers/payment.js";
 
 // Endpoint untuk membuat transaksi
 router.post("/create-transaction", paymentController.index);
-router.route("/confirmation").post(paymentController.confirmation);
+router.post("/confirmation", paymentController.confirmation);
 
 export default router;

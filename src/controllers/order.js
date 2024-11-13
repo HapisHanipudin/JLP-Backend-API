@@ -60,6 +60,7 @@ export default {
 
       await updateOrder(order.id, {
         paymentUrl: transaction.redirect_url,
+        snapToken: transaction.token,
       });
 
       const paymentInformation = {
