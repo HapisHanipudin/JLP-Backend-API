@@ -1,5 +1,5 @@
 import { deleteCart, getCartByID } from "../db/cart.js";
-import { createOrder, createOrderItem, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder } from "../db/order.js";
+import { createOrder, createOrderItem, createOrderItems, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder } from "../db/order.js";
 import { trackOrderTransformer } from "../transformers/order.js";
 import { snap } from "../utils/midtrans.js";
 
@@ -29,8 +29,8 @@ export default {
 
       // Menggunakan Promise.all untuk membuat OrderItem secara paralel
       await Promise.all(
-        carts.map(async (cart) => {
-          const item = await createOrderItem({
+        carts.map((cart) => {
+          items.push({
             orderId: order.id,
             productId: cart.productId,
             quantity: cart.quantity,
@@ -38,9 +38,10 @@ export default {
             totalPrice: cart.product.price * cart.quantity,
             note: cart.note,
           });
-          items.push(item);
         })
       );
+
+      const orderItems = await createOrderItems(items);
 
       // Data parameter transaksi
       const parameter = {
@@ -72,7 +73,7 @@ export default {
         order: {
           ...order,
           paymentUrl: transaction.redirect_url,
-          items,
+          items: orderItems,
         },
         paymentInformation,
       });

@@ -33,9 +33,13 @@ export default {
     }
   },
   confirmation: async (req, res) => {
-    const body = req.body;
+    const { status, order_id } = req.body;
 
-    const order = await getOrderById(body.order_id);
+    if (!status || !order_id) {
+      return res.status(400).json({ error: "Missing required parameters" });
+    }
+
+    const order = await getOrderById(order_id);
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
@@ -44,30 +48,32 @@ export default {
     const newOrder = {};
 
     if (order.status === "PENDING") {
-      if (body.status === "settlement" || body.status === "capture") {
+      if (status === "settlement" || status === "capture") {
         newOrder.status = "PAID";
-      } else if (body.status === "deny" || body.status === "cancel") {
+      } else if (status === "deny" || status === "cancel") {
         newOrder.status = "CANCELLED";
-      } else if (body.status === "expire") {
+      } else if (status === "expire") {
         newOrder.status = "FAILED";
       }
 
       const updatedOrder = await updateOrder(order.id, newOrder);
-      let updatedItems;
+      let updatedItems = [];
 
       if (!updatedOrder) {
         return res.status(500).json({ error: "Failed to update order" });
       } else {
         const newItem = {};
-        if (body.status === "settlement" || body.status === "capture") {
+        if (status === "settlement" || status === "capture") {
           newItem.status = "PAID";
-        } else if (body.status === "deny" || body.status === "cancel") {
+        } else if (status === "deny" || status === "cancel") {
           newItem.status = "CANCELLED";
-        } else if (body.status === "expire") {
+        } else if (status === "expire") {
           newItem.status = "FAILED";
         }
         updatedItems = await updateOrderItems(updatedOrder.id, newItem);
       }
+
+      updatedOrder.items = updatedItems;
 
       return res.json(updatedOrder);
     }

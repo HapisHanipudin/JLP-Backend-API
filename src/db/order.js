@@ -19,9 +19,7 @@ export const updateOrder = async (id, data) => {
 export const updateOrderItems = async (orderIds, data) => {
   return await prisma.orderItem.updateMany({
     where: {
-      orderId: {
-        in: orderIds,
-      },
+      orderId: orderIds,
     },
     data,
   });
@@ -35,6 +33,10 @@ export const getOrderById = async (id) => {
       items: true,
     },
   });
+};
+
+export const createOrderItems = async (data) => {
+  return await prisma.orderItem.createMany({ data });
 };
 
 export const createOrderItem = async (data) => {
