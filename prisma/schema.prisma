@@ -59,7 +59,7 @@ model Vendor {
   NPWP         Int?
   BankCode     Int?
   BankAccount  Int?
-  updatedAt DateTime @updatedAt
+  updatedAt    DateTime       @updatedAt
   createdAt    DateTime       @default(now())
   contacts     Contact[]
   products     Product[]
@@ -67,6 +67,26 @@ model Vendor {
   User         User[]
   category     Category       @relation(fields: [categoryId], references: [id])
   banners      VendorBanner[]
+  profitSplits ProfitSplit[] // Relasi ke profit split per vendor
+  donations    Donation[] // Relasi ke donasi
+  balance      Int            @default(0) // Saldo dana yang tersedia untuk pencairan
+  withdrawals  Withdrawal[] // Relasi ke tabel pencairan
+}
+
+model Withdrawal {
+  id          String           @id @default(uuid())
+  vendorId    String
+  amount      Int // Jumlah dana yang diminta untuk pencairan
+  status      WithdrawalStatus @default(PENDING) // Status pencairan
+  requestedAt DateTime         @default(now()) // Tanggal permintaan pencairan
+  approvedAt  DateTime? // Tanggal persetujuan pencairan, opsional
+  vendor      Vendor           @relation(fields: [vendorId], references: [id])
+}
+
+enum WithdrawalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model VendorBanner {
@@ -141,10 +161,11 @@ model Order {
   updatedAt   DateTime    @updatedAt
   owner       User        @relation(fields: [userId], references: [id])
   items       OrderItem[]
+  donation    Donation? // Relasi opsional ke donasi
 }
 
 model OrderItem {
-  id         String  @id @default(uuid())
+  id         String     @id @default(uuid())
   orderId    String
   productId  String
   quantity   Int
@@ -152,8 +173,8 @@ model OrderItem {
   status     ItemStatus @default(PENDING)
   totalPrice Int
   note       String?
-  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product    Product @relation(fields: [productId], references: [id])
+  order      Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product    @relation(fields: [productId], references: [id])
 
   @@index([orderId])
 }
@@ -173,4 +194,22 @@ enum ItemStatus {
   SENT
   REJECTED
   COMPLETED
+}
+
+model ProfitSplit {
+  id                  String @id @default(uuid())
+  vendorId            String // Vendor terkait
+  percentageVendor    Float // Persentase untuk vendor (contoh: 0.99 untuk 99%)
+  percentagePalestine Float // Persentase untuk Palestina (contoh: 0.01 untuk 1%)
+  vendor              Vendor @relation(fields: [vendorId], references: [id])
+}
+
+model Donation {
+  id        String   @id @default(uuid())
+  orderId   String   @unique
+  vendorId  String // Vendor terkait
+  amount    Int // Jumlah donasi dalam bentuk nominal
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id])
+  vendor    Vendor   @relation(fields: [vendorId], references: [id])
 }

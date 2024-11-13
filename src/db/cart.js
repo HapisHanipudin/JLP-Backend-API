@@ -22,6 +22,7 @@ export const deleteCart = async (id) => {
 export const getUserCart = async (userId) => {
   return await prisma.cart.findMany({
     where: { userId },
-    include: { product: true },
+    include: { product: { include: { vendor: true } } },
+    orderBy: { createdAt: "desc" },
   });
 };
