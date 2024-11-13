@@ -31,5 +31,9 @@ export default {
       return res.status(500).json({ error: error.message });
     }
   },
-  confirmation: async (req, res) => {},
+  confirmation: async (req, res) => {
+    const body = req.body;
+    console.log(body);
+    res.json(body);
+  },
 };
