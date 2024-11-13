@@ -18,6 +18,7 @@ const authMiddleware = async (req, res, next) => {
     { method: "POST", endpoint: "/order" },
     { method: "GET", endpoint: "/order" },
     { method: "GET", endpoint: "/order/:status" },
+    { method: "GET", endpoint: "/oreder/track" },
   ];
 
   const isHandled = endpoints.some(({ method, endpoint }) => {

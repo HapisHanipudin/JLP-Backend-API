@@ -24,20 +24,34 @@ export default {
       }
 
       const vendorId = req.auth.vendorToken;
+      let imageUpload;
 
-      const imageUpload = await cloudinaryUpload(image[0].filepath);
+      try {
+        imageUpload = await cloudinaryUpload(image[0].filepath);
+      } catch (error) {
+        return res.status(500).json({
+          statusCode: 500,
+          statusMessage: "Gagal upload gambar",
+        });
+      }
+      try {
+        const data = {
+          name: name[0],
+          price: parseInt(price[0], 10),
+          description: description[0],
+          vendorId,
+          imageUrl: imageUpload.secure_url,
+        };
 
-      const data = {
-        name: name[0],
-        price: parseInt(price[0], 10),
-        description: description[0],
-        vendorId,
-        imageUrl: imageUpload.secure_url,
-      };
+        const post = await createProduct(data);
 
-      const post = await createProduct(data);
-
-      res.json(post);
+        res.json(post);
+      } catch (error) {
+        res.status(500).json({
+          statusCode: 500,
+          statusMessage: error.message,
+        });
+      }
     });
   },
   getProductById: async (req, res) => {

@@ -39,3 +39,25 @@ export const getUserOrderByStatus = async (userId, status) => {
     },
   });
 };
+
+export const trackOrderItems = async (userId) => {
+  return await prisma.orderItem.findMany({
+    where: {
+      order: {
+        userId,
+      },
+    },
+    include: {
+      order: {
+        include: {
+          owner: true,
+        },
+      },
+      product: {
+        include: {
+          vendor: true,
+        },
+      },
+    },
+  });
+};

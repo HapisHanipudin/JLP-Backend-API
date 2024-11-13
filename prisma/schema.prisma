@@ -149,6 +149,7 @@ model OrderItem {
   productId  String
   quantity   Int
   price      Int
+  status     ItemStatus @default(PENDING)
   totalPrice Int
   note       String?
   order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -163,4 +164,13 @@ enum orderStatus {
   PROCESS
   COMPLETED
   CANCELLED
+}
+
+enum ItemStatus {
+  PENDING
+  PAID
+  PROCESS
+  SENT
+  REJECTED
+  COMPLETED
 }

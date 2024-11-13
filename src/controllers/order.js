@@ -1,5 +1,6 @@
 import { deleteCart, getCartByID } from "../db/cart.js";
-import { createOrder, createOrderItem, getUserOrder, getUserOrderByStatus, updateOrder } from "../db/order.js";
+import { createOrder, createOrderItem, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder } from "../db/order.js";
+import { trackOrderTransformer } from "../transformers/order.js";
 import { snap } from "../utils/midtrans.js";
 
 export default {
@@ -107,5 +108,12 @@ export default {
     }
 
     res.json(orders);
+  },
+  trackOrder: async (req, res) => {
+    const userId = req.auth.id;
+
+    const orderItems = await trackOrderItems(userId);
+
+    res.json(orderItems.map(trackOrderTransformer));
   },
 };

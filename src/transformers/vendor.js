@@ -58,3 +58,13 @@ export const vendorDashboard = (vendor) => {
     BankAccount: vendor.BankAccount,
   };
 };
+
+export const productTransformer = (prod) => {
+  return {
+    id: prod.id,
+    name: prod.name,
+    imageUrl: prod.imageUrl,
+    price: prod.price,
+    description: prod.description,
+  };
+};
