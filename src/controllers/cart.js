@@ -1,4 +1,5 @@
 import { createCart, getUserCart } from "../db/cart.js";
+import { cartTransformer } from "../transformers/review.js";
 
 export default {
   index: async (req, res) => {},
@@ -40,6 +41,6 @@ export default {
       });
     }
 
-    res.json(userCart);
+    res.json(userCart.map(cartTransformer));
   },
 };
