@@ -38,7 +38,7 @@ export const vendorTransformer = (data) => {
     mapsUrl: data.gmapsUrl,
     icon: data.iconUrl,
     reviewCounts: reviewCounts,
-    newestReview: data.reviews.length > 0 ? reviewTransformer(data.reviews[0]) : null,
+    // newestReview: data.reviews.length > 0 ? reviewTransformer(data.reviews[0]) : null,
   };
 };
 

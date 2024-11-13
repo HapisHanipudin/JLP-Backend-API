@@ -22,7 +22,22 @@ export const deleteCart = async (id) => {
 export const getUserCart = async (userId) => {
   return await prisma.cart.findMany({
     where: { userId },
-    include: { product: { include: { vendor: true } } },
+    include: {
+      product: {
+        include: {
+          vendor: {
+            include: {
+              category: true,
+              reviews: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 };
