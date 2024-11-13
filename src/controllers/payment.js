@@ -33,7 +33,7 @@ export default {
     }
   },
   confirmation: async (req, res) => {
-    const { status, order_id } = req.body;
+    const { transaction_status: status, order_id } = req.body;
 
     if (!status || !order_id) {
       return res.status(400).json({ error: "Missing required parameters" });
