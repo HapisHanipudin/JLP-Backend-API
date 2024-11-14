@@ -29,7 +29,7 @@ export default {
 
       // Menggunakan Promise.all untuk membuat OrderItem secara paralel
       await Promise.all(
-        carts.map((cart) => {
+        carts.forEach((cart) => {
           items.push({
             orderId: order.id,
             productId: cart.productId,

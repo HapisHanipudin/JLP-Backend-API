@@ -2,14 +2,18 @@ import UrlPattern from "url-pattern";
 import { decodeAccessToken } from "../utils/jwt.js";
 import { getUserById } from "../db/user.js";
 import { userTransformer } from "../transformers/user.js";
+import { getVendorById } from "../db/vendor.js";
 
 const authMiddleware = async (req, res, next) => {
+  const needVendor = [
+    { method: "POST", endpoint: "/product" },
+    { method: "GET", endpoint: "/vendor/dashboard" },
+  ];
   const endpoints = [
     { method: "GET", endpoint: "/auth/user" },
     { method: "PUT", endpoint: "/auth/user" },
     { method: "PUT", endpoint: "/auth/user/profile" },
     { method: "POST", endpoint: "/news" },
-    { method: "POST", endpoint: "/product" },
     { method: "POST", endpoint: "/vendor" },
     { method: "POST", endpoint: "/review/:vendorId" },
     { method: "POST", endpoint: "/vendor/:slug/reviews" },
@@ -21,7 +25,7 @@ const authMiddleware = async (req, res, next) => {
     { method: "GET", endpoint: "/oreder/track" },
   ];
 
-  const isHandled = endpoints.some(({ method, endpoint }) => {
+  const isHandled = [...needVendor, ...endpoints].some(({ method, endpoint }) => {
     const pattern = new UrlPattern(endpoint);
 
     // Cek apakah URL dan metode HTTP sesuai
@@ -53,6 +57,28 @@ const authMiddleware = async (req, res, next) => {
 
     // Menyimpan user di request context (req.auth)
     req.auth = userTransformer(user);
+
+    const isNeedVendor = needVendor.some(({ method, endpoint }) => {
+      const pattern = new UrlPattern(endpoint);
+
+      // Cek apakah URL dan metode HTTP sesuai
+      return pattern.match(req.url) && req.method === method;
+    });
+
+    if (!isNeedVendor) {
+      return next();
+    }
+
+    const vendorId = user.vendorId;
+    if (!vendorId) {
+      return res.status(401).json({ message: "You didnt have any vendor" });
+    }
+
+    const vendor = await getVendorById(vendorId);
+    if (!vendor) {
+      return res.status(404).json({ message: "Vendor not found" });
+    }
+    req.auth.vendor = vendor;
 
     // Lanjutkan ke middleware berikutnya atau route handler
     next();
