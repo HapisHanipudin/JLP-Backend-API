@@ -29,8 +29,8 @@ export default {
 
       // Menggunakan Promise.all untuk membuat OrderItem secara paralel
       await Promise.all(
-        carts.forEach((cart) => {
-          items.push({
+        carts.map(async (cart) => {
+          const item = await createOrderItem({
             orderId: order.id,
             productId: cart.productId,
             quantity: cart.quantity,
@@ -38,10 +38,9 @@ export default {
             totalPrice: cart.product.price * cart.quantity,
             note: cart.note,
           });
+          items.push(item);
         })
       );
-
-      const orderItems = await createOrderItems(items);
 
       // Data parameter transaksi
       const parameter = {
@@ -73,7 +72,7 @@ export default {
         order: {
           ...order,
           paymentUrl: transaction.redirect_url,
-          items: orderItems,
+          items,
         },
         paymentInformation,
       });
