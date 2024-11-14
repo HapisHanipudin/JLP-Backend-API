@@ -64,7 +64,7 @@ export default {
       });
 
       const paymentInformation = {
-        token: transaction.token,
+        snapToken: transaction.token,
         redirect_url: transaction.redirect_url,
       };
 
