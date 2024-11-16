@@ -28,7 +28,7 @@ export default {
   },
 
   create: async (req, res) => {
-    const form = formidable({ multiples: true });
+    const form = formidable({ allowEmptyFiles: true, multiples: true });
 
     form.parse(req, async (err, fields, files) => {
       if (err) {
