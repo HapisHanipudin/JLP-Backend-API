@@ -32,7 +32,7 @@ export default {
 
     form.parse(req, async (err, fields, files) => {
       if (err) {
-        res.status(500).send({ success: false, message: err.message });
+        return res.status(500).send({ success: false, message: err.message });
       }
 
       const { name, categoryId, description, gmapsUrl, openingHours, closingHours, address } = fields;
@@ -186,4 +186,5 @@ export default {
     }
     res.json(vendorDetailTransformer(result));
   },
+  dashboard: async (req, res) => {},
 };

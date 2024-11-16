@@ -67,10 +67,19 @@ model Vendor {
   User         User[]
   category     Category       @relation(fields: [categoryId], references: [id])
   banners      VendorBanner[]
-  profitSplits ProfitSplit[] // Relasi ke profit split per vendor
+  profitSplits ProfitSplit? // Relasi ke profit split per vendor
   donations    Donation[] // Relasi ke donasi
-  balance      Int            @default(0) // Saldo dana yang tersedia untuk pencairan
+  incomes      Income[] // Relasi ke tabel pemasukan
   withdrawals  Withdrawal[] // Relasi ke tabel pencairan
+}
+
+model Income {
+  id        String   @id @default(uuid())
+  vendorId  String
+  amount    Int // Jumlah pemasukan
+  source    String // Sumber pemasukan (misalnya, "order")
+  createdAt DateTime @default(now()) // Tanggal pemasukan
+  vendor    Vendor   @relation(fields: [vendorId], references: [id])
 }
 
 model Withdrawal {
@@ -202,7 +211,7 @@ enum ItemStatus {
 
 model ProfitSplit {
   id                  String @id @default(uuid())
-  vendorId            String // Vendor terkait
+  vendorId            String @unique // Vendor terkait
   percentageVendor    Float // Persentase untuk vendor (contoh: 0.99 untuk 99%)
   percentagePalestine Float // Persentase untuk Palestina (contoh: 0.01 untuk 1%)
   vendor              Vendor @relation(fields: [vendorId], references: [id])

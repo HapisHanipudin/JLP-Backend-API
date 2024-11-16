@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.route("/").get(vendorController.index).post(vendorController.create);
 router.route("/:slug").get(vendorController.getBySlug);
+router.route("/dashboard").get(vendorController.dashboard);
 router.route("/:slug/products").get(vendorController.getProducts);
 router.route("/:slug/reviews").get(vendorController.getReviews).post(vendorController.postReview);
 router.route("/category/:category").get(vendorController.getByCategory);
