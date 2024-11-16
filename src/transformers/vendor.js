@@ -1,5 +1,19 @@
 import { reviewTransformer } from "./review.js";
 
+export const vendorMinimalTransformer = (data) => {
+  return {
+    id: data.id,
+    slug: data.slug,
+    name: data.name,
+    description: data.description,
+    address: data.address,
+    openingHours: data.openingHours,
+    closingHours: data.closingHours,
+    mapsUrl: data.gmapsUrl,
+    icon: data.iconUrl,
+  };
+};
+
 export const vendorDetailTransformer = (data) => {
   return {
     ...vendorTransformer(data),
@@ -26,17 +40,9 @@ export const vendorTransformer = (data) => {
   );
 
   return {
-    id: data.id,
-    slug: data.slug,
-    name: data.name,
+    ...vendorMinimalTransformer(data),
     rating: rating === null ? 0 : rating,
-    description: data.description,
-    address: data.address,
     category: data.category,
-    openingHours: data.openingHours,
-    closingHours: data.closingHours,
-    mapsUrl: data.gmapsUrl,
-    icon: data.iconUrl,
     reviewCounts: reviewCounts,
     // newestReview: data.reviews.length > 0 ? reviewTransformer(data.reviews[0]) : null,
   };

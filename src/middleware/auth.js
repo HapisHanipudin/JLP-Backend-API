@@ -3,6 +3,7 @@ import { decodeAccessToken } from "../utils/jwt.js";
 import { getUserById } from "../db/user.js";
 import { userTransformer } from "../transformers/user.js";
 import { getVendorById } from "../db/vendor.js";
+import { vendorMinimalTransformer } from "../transformers/vendor.js";
 
 const authMiddleware = async (req, res, next) => {
   const needVendor = [
@@ -78,7 +79,7 @@ const authMiddleware = async (req, res, next) => {
     if (!vendor) {
       return res.status(404).json({ message: "Vendor not found" });
     }
-    req.auth.vendor = vendor;
+    req.auth.vendor = vendorMinimalTransformer(vendor);
 
     // Lanjutkan ke middleware berikutnya atau route handler
     next();

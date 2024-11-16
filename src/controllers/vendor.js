@@ -1,8 +1,8 @@
 import formidable from "formidable";
-import { createVendor, getVendors, getVendorDetailBySlug, getVendorByCategory, updateVendor, getVendorBySlug, getVendorById, getVendorDetailById } from "../db/vendor.js";
+import { createVendor, getVendors, getVendorDetailBySlug, getVendorByCategory, updateVendor, getVendorBySlug, getVendorById, getVendorDetailById, getVendorDashboard } from "../db/vendor.js";
 import { cloudinaryUpload } from "../utils/cloudinary.js";
 import { updateUser } from "../db/user.js";
-import { vendorDetailTransformer, vendorTransformer } from "../transformers/vendor.js";
+import { vendorDetailTransformer, vendorTransformer, vendorMinimalTransformer } from "../transformers/vendor.js";
 import { getCategory } from "../db/category.js";
 import { getVendorProduct } from "../db/product.js";
 import { createReview, getReviewByVendorId } from "../db/review.js";
@@ -186,5 +186,20 @@ export default {
     }
     res.json(vendorDetailTransformer(result));
   },
-  dashboard: async (req, res) => {},
+  dashboard: async (req, res) => {
+    const vendorId = req.auth.vendor.id;
+
+    const vendor = await getVendorDashboard(vendorId);
+
+    const response = {
+      ...vendorMinimalTransformer(vendor),
+      balance: vendor.incomes.reduce((total, income) => total + income.amount, 0) - vendor.withdrawals.reduce((total, withdrawal) => total + withdrawal.amount, 0),
+      deliveredItem: vendor.products.reduce((total, product) => total + product.order.filter((order) => ["SENT", "COMPLETED"].includes(order.status)).length, 0),
+      productsSold: vendor.products.reduce((total, product) => total + product.order.filter((order) => order.status === "COMPLETED").reduce((subTotal, orderItem) => subTotal + orderItem.quantity, 0), 0),
+      customerCount: new Set(vendor.products.flatMap((product) => product.order.map((orderItem) => orderItem.order.userId))).size,
+      orderCount: new Set(vendor.products.flatMap((product) => product.order.filter((order) => order.status === "COMPLETED").map((orderItem) => orderItem.orderId))).size,
+    };
+
+    res.json(response);
+  },
 };

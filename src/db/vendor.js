@@ -120,3 +120,25 @@ export const getVendorDetailById = async (id) => {
     },
   });
 };
+
+export const getVendorDashboard = async (id) => {
+  return await prisma.vendor.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      category: true,
+      incomes: true,
+      withdrawals: true,
+      products: {
+        include: {
+          order: {
+            include: {
+              order: true,
+            },
+          },
+        },
+      },
+    },
+  });
+};
