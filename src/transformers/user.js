@@ -8,5 +8,6 @@ export const userTransformer = (user) => {
     profileImage: user.profileImage,
     handle: `@${user.username}`,
     vendorId: user.vendorId || null,
+    isVendor: user.vendorId ? true : false,
   };
 };
