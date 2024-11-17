@@ -19,7 +19,16 @@ export const updateOrder = async (id, data) => {
 export const updateOrderItems = async (orderIds, data) => {
   return await prisma.orderItem.updateMany({
     where: {
-      orderId: orderIds,
+      orderId: { in: orderIds },
+    },
+    data,
+  });
+};
+
+export const updateOrderItem = async (id, data) => {
+  return await prisma.orderItem.update({
+    where: {
+      id,
     },
     data,
   });
@@ -31,6 +40,26 @@ export const getOrderById = async (id) => {
     },
     include: {
       items: true,
+    },
+  });
+};
+
+export const getOrderItemById = async (id) => {
+  return await prisma.orderItem.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      order: {
+        include: {
+          owner: true,
+        },
+      },
+      product: {
+        include: {
+          vendor: true,
+        },
+      },
     },
   });
 };

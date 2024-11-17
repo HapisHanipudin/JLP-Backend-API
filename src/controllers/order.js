@@ -1,5 +1,6 @@
 import { deleteCart, deleteCarts, getCartByID, getCartByIds } from "../db/cart.js";
-import { createOrder, createOrderItem, createOrderItems, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder } from "../db/order.js";
+import { createOrder, createOrderItem, createOrderItems, getOrderById, getOrderItemById, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder, updateOrderItem } from "../db/order.js";
+import { createIncome } from "../db/transaction.js";
 import { trackOrderTransformer } from "../transformers/order.js";
 import { snap } from "../utils/midtrans.js";
 
@@ -120,5 +121,57 @@ export default {
     const orderItems = await trackOrderItems(userId);
 
     res.json(orderItems.map(trackOrderTransformer));
+  },
+  updateOrder: async (req, res) => {
+    const orderId = req.params.orderId;
+
+    const { status } = req.query;
+
+    if (status) {
+      const order = await updateOrder(orderId, { status });
+      return res.json(order);
+    }
+  },
+  updateOrderItem: async (req, res) => {
+    const id = req.params.id;
+
+    const { status } = req.query;
+    let updateData = {};
+
+    let order = await getOrderItemById(id);
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    if (status) {
+      const orderItem = await getOrderItemById(id);
+      if (status == orderItem.status) {
+        return res.status(400).json({ error: `Order has already been ${status.toLowerCase()}` });
+      }
+      if (status == "PROCESS" || status == "SENT" || status == "REJECTED" || status == "FAILED" || status == "ARRIVED") {
+        if (req.auth.vendorId !== orderItem.product.vendorId && !req.auth.isVendor) {
+          return res.status(403).json({ error: "You are not authorized to update this order" });
+        }
+        await updateOrderItem(id, { status });
+      } else if (status == "COMPLETED" || status == "CANCELLED") {
+        if (req.auth.id !== orderItem.order.userId) {
+          return res.status(403).json({ error: "You are not authorized to update this order" });
+        }
+        if (status == "COMPLETED") {
+          await createIncome({
+            amount: orderItem.totalPrice,
+            vendorId: orderItem.product.vendorId,
+            orderId: id,
+          });
+        }
+      }
+      if (req.body) {
+        updateData = req.body;
+      }
+    }
+    await updateOrderItem(id, updateData);
+
+    order = await getOrderItemById(id);
+    return res.json(order);
   },
 };

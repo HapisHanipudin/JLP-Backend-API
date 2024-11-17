@@ -25,14 +25,15 @@ const authMiddleware = async (req, res, next) => {
     { method: "POST", endpoint: "/order" },
     { method: "GET", endpoint: "/order" },
     { method: "GET", endpoint: "/order/:status" },
-    { method: "GET", endpoint: "/oreder/track" },
+    { method: "GET", endpoint: "/order/track" },
+    { method: "PUT", endpoint: "/order/item/:id" },
   ];
 
   const isHandled = [...needVendor, ...endpoints].some(({ method, endpoint }) => {
-    const pattern = new UrlPattern(endpoint);
+    const pattern = new UrlPattern(endpoint, true);
 
     // Cek apakah URL dan metode HTTP sesuai
-    return pattern.match(req.url) && req.method === method;
+    return pattern.match(req.url.split("?")[0]) && req.method === method;
   });
 
   // Jika URL tidak sesuai dengan endpoint yang ditangani, lanjutkan tanpa autentikasi
@@ -62,20 +63,20 @@ const authMiddleware = async (req, res, next) => {
     req.auth = userTransformer(user);
 
     const isNeedVendor = needVendor.some(({ method, endpoint }) => {
-      const pattern = new UrlPattern(endpoint);
+      const pattern = new UrlPattern(endpoint, true);
 
       // Cek apakah URL dan metode HTTP sesuai
-      return pattern.match(req.url) && req.method === method;
+      return pattern.match(req.url.split("?")[0]) && req.method === method;
     });
 
     if (!isNeedVendor) {
       return next();
     }
 
-    const vendorId = user.vendorId;
-    if (!vendorId) {
+    if (!user.vendorId) {
       return res.status(401).json({ message: "You didnt have any vendor" });
     }
+    const vendorId = user.vendorId;
 
     const vendor = await getVendorById(vendorId);
     if (!vendor) {

@@ -55,47 +55,43 @@ model Vendor {
   description  String
   gmapsUrl     String
   iconUrl      String
+  createdAt    DateTime       @default(now())
+  BankAccount  Int?
+  BankCode     Int?
   NIK          Int?
   NPWP         Int?
-  BankCode     Int?
-  BankAccount  Int?
   updatedAt    DateTime       @updatedAt
-  createdAt    DateTime       @default(now())
   contacts     Contact[]
+  donations    Donation[]
+  incomes      Income[]
   products     Product[]
+  percentageVendor    Float  @default(0.01)
+  percentagePalestine Float @default(0.99)
   reviews      Reviews[]
   User         User[]
   category     Category       @relation(fields: [categoryId], references: [id])
   banners      VendorBanner[]
-  profitSplits ProfitSplit? // Relasi ke profit split per vendor
-  donations    Donation[] // Relasi ke donasi
-  incomes      Income[] // Relasi ke tabel pemasukan
-  withdrawals  Withdrawal[] // Relasi ke tabel pencairan
+  withdrawals  Withdrawal[]
 }
 
 model Income {
   id        String   @id @default(uuid())
   vendorId  String
-  amount    Int // Jumlah pemasukan
-  source    String // Sumber pemasukan (misalnya, "order")
-  createdAt DateTime @default(now()) // Tanggal pemasukan
+  amount    Int
+  orderId   String
+  source    Order    @relation(fields: [orderId], references: [id])
+  createdAt DateTime @default(now())
   vendor    Vendor   @relation(fields: [vendorId], references: [id])
 }
 
 model Withdrawal {
   id          String           @id @default(uuid())
   vendorId    String
-  amount      Int // Jumlah dana yang diminta untuk pencairan
-  status      WithdrawalStatus @default(PENDING) // Status pencairan
-  requestedAt DateTime         @default(now()) // Tanggal permintaan pencairan
-  approvedAt  DateTime? // Tanggal persetujuan pencairan, opsional
+  amount      Int
+  status      WithdrawalStatus @default(PENDING)
+  requestedAt DateTime         @default(now())
+  approvedAt  DateTime?
   vendor      Vendor           @relation(fields: [vendorId], references: [id])
-}
-
-enum WithdrawalStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }
 
 model VendorBanner {
@@ -166,12 +162,13 @@ model Order {
   status      orderStatus @default(PENDING)
   totalAmount Int
   paymentUrl  String?
-  snapToken   String?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  snapToken   String?
+  donation    Donation?
   owner       User        @relation(fields: [userId], references: [id])
   items       OrderItem[]
-  donation    Donation? // Relasi opsional ke donasi
+  incomes     Income[]
 }
 
 model OrderItem {
@@ -180,13 +177,30 @@ model OrderItem {
   productId  String
   quantity   Int
   price      Int
-  status     ItemStatus @default(PENDING)
   totalPrice Int
   note       String?
+  status     ItemStatus @default(PENDING)
   order      Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product    Product    @relation(fields: [productId], references: [id])
 
   @@index([orderId])
+}
+
+
+model Donation {
+  id        String   @id @default(uuid())
+  orderId   String   @unique
+  vendorId  String
+  amount    Int
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id])
+  vendor    Vendor   @relation(fields: [vendorId], references: [id])
+}
+
+enum WithdrawalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum orderStatus {
@@ -203,27 +217,9 @@ enum ItemStatus {
   PAID
   PROCESS
   SENT
-  ARRIVED
   REJECTED
   COMPLETED
   CANCELLED
   FAILED
-}
-
-model ProfitSplit {
-  id                  String @id @default(uuid())
-  vendorId            String @unique // Vendor terkait
-  percentageVendor    Float // Persentase untuk vendor (contoh: 0.99 untuk 99%)
-  percentagePalestine Float // Persentase untuk Palestina (contoh: 0.01 untuk 1%)
-  vendor              Vendor @relation(fields: [vendorId], references: [id])
-}
-
-model Donation {
-  id        String   @id @default(uuid())
-  orderId   String   @unique
-  vendorId  String // Vendor terkait
-  amount    Int // Jumlah donasi dalam bentuk nominal
-  createdAt DateTime @default(now())
-  order     Order    @relation(fields: [orderId], references: [id])
-  vendor    Vendor   @relation(fields: [vendorId], references: [id])
+  ARRIVED
 }
