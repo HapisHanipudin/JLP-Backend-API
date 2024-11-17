@@ -1,4 +1,4 @@
-import { deleteCart, getCartByID, getCartByIds } from "../db/cart.js";
+import { deleteCart, deleteCarts, getCartByID, getCartByIds } from "../db/cart.js";
 import { createOrder, createOrderItem, createOrderItems, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder } from "../db/order.js";
 import { trackOrderTransformer } from "../transformers/order.js";
 import { snap } from "../utils/midtrans.js";
@@ -9,15 +9,20 @@ export default {
   post: async (req, res) => {
     try {
       const { cartIds } = req.body;
+
+      if (!cartIds) {
+        return res.status(400).json({
+          statusCode: 400,
+          statusMessage: "Invalid params",
+        });
+      }
       const carts = [];
       const items = [];
       let totalPrice = 0;
 
       carts = await getCartByIds(cartIds);
       totalPrice = carts.reduce((total, cart) => total + cart.product.price * cart.quantity, 0);
-      for (const cartId of cartIds) {
-        await deleteCart(cartId);
-      }
+      await deleteCarts(cartIds);
 
       const orderData = {
         userId: req.auth.id,
