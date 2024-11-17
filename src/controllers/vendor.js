@@ -7,6 +7,8 @@ import { getCategory } from "../db/category.js";
 import { getVendorProduct } from "../db/product.js";
 import { createReview, getReviewByVendorId } from "../db/review.js";
 import { reviewTransformer } from "../transformers/review.js";
+import { getVendorOrders } from "../db/order.js";
+import { trackOrderTransformer } from "../transformers/order.js";
 
 // const vendors = [
 //   {
@@ -197,9 +199,14 @@ export default {
       deliveredItem: vendor.products.reduce((total, product) => total + product.order.filter((order) => ["SENT", "COMPLETED"].includes(order.status)).length, 0),
       productsSold: vendor.products.reduce((total, product) => total + product.order.filter((order) => order.status === "COMPLETED").reduce((subTotal, orderItem) => subTotal + orderItem.quantity, 0), 0),
       customerCount: new Set(vendor.products.flatMap((product) => product.order.map((orderItem) => orderItem.order.userId))).size,
-      orderCount: new Set(vendor.products.flatMap((product) => product.order.filter((order) => order.status === "COMPLETED").map((orderItem) => orderItem.orderId))).size,
+      orderCount: vendor.products.reduce((total, product) => total + product.order.length, 0),
     };
 
     res.json(response);
+  },
+  getVendorOrderDashboard: async (req, res) => {
+    const vendorId = req.auth.vendor.id;
+    const result = await getVendorOrders(vendorId);
+    res.json(result.map(trackOrderTransformer));
   },
 };

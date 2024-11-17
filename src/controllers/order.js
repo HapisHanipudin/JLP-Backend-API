@@ -1,4 +1,4 @@
-import { deleteCart, getCartByID } from "../db/cart.js";
+import { deleteCart, getCartByID, getCartByIds } from "../db/cart.js";
 import { createOrder, createOrderItem, createOrderItems, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder } from "../db/order.js";
 import { trackOrderTransformer } from "../transformers/order.js";
 import { snap } from "../utils/midtrans.js";
@@ -13,10 +13,9 @@ export default {
       const items = [];
       let totalPrice = 0;
 
+      carts = await getCartByIds(cartIds);
+      totalPrice = carts.reduce((total, cart) => total + cart.product.price * cart.quantity, 0);
       for (const cartId of cartIds) {
-        const cart = await getCartByID(cartId);
-        totalPrice += cart.product.price * cart.quantity;
-        carts.push(cart);
         await deleteCart(cartId);
       }
 

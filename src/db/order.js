@@ -87,3 +87,25 @@ export const trackOrderItems = async (userId) => {
     },
   });
 };
+
+export const getVendorOrders = async (vendorId) => {
+  return await prisma.orderItem.findMany({
+    where: {
+      product: {
+        vendorId,
+      },
+    },
+    include: {
+      order: {
+        include: {
+          owner: true,
+        },
+      },
+      product: {
+        include: {
+          vendor: true,
+        },
+      },
+    },
+  });
+};

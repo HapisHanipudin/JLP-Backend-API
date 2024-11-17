@@ -10,6 +10,9 @@ export default {
   index: async (req, res) => {
     res.send(req.auth);
   },
+  getVendor: async (req, res) => {
+    res.send(req.auth.vendor);
+  },
   profileImage: async (req, res) => {
     const userId = req.auth.id;
 

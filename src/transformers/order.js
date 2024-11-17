@@ -10,3 +10,12 @@ export const trackOrderTransformer = (item) => {
     status: item.status,
   };
 };
+
+export const orderItemDashboard = (order) => {
+  return {
+    id: order.id,
+    totalAmount: order.totalAmount,
+    status: order.status,
+    items: order.items.map((item) => trackOrderTransformer(item)),
+  };
+};

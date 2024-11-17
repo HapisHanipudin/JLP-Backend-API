@@ -1,7 +1,7 @@
 import human from "human-time";
 import { userTransformer } from "./user.js";
 import cart from "../controllers/cart.js";
-import { productTransformer, vendorTransformer } from "./vendor.js";
+import { productTransformer, vendorMinimalTransformer, vendorTransformer } from "./vendor.js";
 
 export const reviewTransformer = (review) => {
   return {
@@ -20,6 +20,6 @@ export const cartTransformer = (cart) => {
     quantity: cart.quantity,
     note: cart.note,
     product: productTransformer(cart.product),
-    vendor: vendorTransformer(cart.product.vendor),
+    vendor: vendorMinimalTransformer(cart.product.vendor),
   };
 };
