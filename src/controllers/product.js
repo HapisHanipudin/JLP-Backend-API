@@ -23,7 +23,7 @@ export default {
         });
       }
 
-      const vendorId = req.auth.vendorToken;
+      const vendorId = req.auth.vendorId;
       let imageUpload;
 
       try {
