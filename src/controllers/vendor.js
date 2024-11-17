@@ -200,6 +200,7 @@ export default {
       productsSold: vendor.products.reduce((total, product) => total + product.order.filter((order) => order.status === "COMPLETED").reduce((subTotal, orderItem) => subTotal + orderItem.quantity, 0), 0),
       customerCount: new Set(vendor.products.flatMap((product) => product.order.map((orderItem) => orderItem.order.userId))).size,
       orderCount: vendor.products.reduce((total, product) => total + product.order.length, 0),
+      donations: vendor.donations.reduce((total, donation) => total + donation.amount, 0),
     };
 
     res.json(response);

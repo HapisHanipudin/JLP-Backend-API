@@ -78,7 +78,7 @@ model Income {
   id        String   @id @default(uuid())
   vendorId  String
   amount    Int
-  orderId   String
+  orderId   String @unique
   source    Order    @relation(fields: [orderId], references: [id])
   createdAt DateTime @default(now())
   vendor    Vendor   @relation(fields: [vendorId], references: [id])
@@ -168,7 +168,7 @@ model Order {
   donation    Donation?
   owner       User        @relation(fields: [userId], references: [id])
   items       OrderItem[]
-  incomes     Income[]
+  incomes     Income?
 }
 
 model OrderItem {

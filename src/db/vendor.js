@@ -130,6 +130,7 @@ export const getVendorDashboard = async (id) => {
       category: true,
       incomes: true,
       withdrawals: true,
+      donations: true,
       products: {
         include: {
           order: {
