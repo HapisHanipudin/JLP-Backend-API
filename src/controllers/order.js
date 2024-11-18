@@ -18,7 +18,7 @@ export default {
           statusMessage: "Invalid params",
         });
       }
-      const carts = [];
+      let carts = [];
       const items = [];
       let totalPrice = 0;
 
