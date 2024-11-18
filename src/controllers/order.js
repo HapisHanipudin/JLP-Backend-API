@@ -200,6 +200,22 @@ export default {
       });
     }
 
-    res.json(orders);
+    const response = orders.map((order) => ({
+      ...order,
+      items: order.items.map((item) => ({
+        id: item.id,
+        productId: item.productId,
+        name: item.product.name,
+        imageUrl: item.product.imageUrl,
+        vendorId: item.product.vendorId,
+        price: item.product.price,
+        description: item.product.description,
+        note: item.note,
+        quantity: item.quantity,
+        totalPrice: item.totalPrice,
+      })),
+    }));
+
+    res.json(response);
   },
 };
