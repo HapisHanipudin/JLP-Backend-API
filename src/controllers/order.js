@@ -1,5 +1,5 @@
 import { deleteCart, deleteCarts, getCartByID, getCartByIds } from "../db/cart.js";
-import { createOrder, createOrderItem, createOrderItems, getOrderById, getOrderItemById, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder, updateOrderItem } from "../db/order.js";
+import { createOrder, createOrderItem, createOrderItems, getOrderById, getOrderHistory, getOrderItemById, getUserOrder, getUserOrderByStatus, trackOrderItems, updateOrder, updateOrderItem } from "../db/order.js";
 import { createDonation, createIncome } from "../db/transaction.js";
 import { getVendorById } from "../db/vendor.js";
 import { trackOrderTransformer } from "../transformers/order.js";
@@ -188,5 +188,18 @@ export default {
 
     item = await getOrderItemById(id);
     return res.json(item);
+  },
+  getOrderHistory: async (req, res) => {
+    const userId = req.auth.id;
+
+    const orders = await getOrderHistory(userId);
+
+    if (!orders) {
+      return res.status(400).json({
+        message: "User has no transaction history",
+      });
+    }
+
+    res.json(orders);
   },
 };

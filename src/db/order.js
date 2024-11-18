@@ -151,3 +151,25 @@ export const getVendorOrders = async (vendorId) => {
     },
   });
 };
+
+export const getOrderHistory = async (userId) => {
+  return await prisma.order.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    where: {
+      userId,
+      status: {
+        in: ["CANCELLED", "COMPLETED"],
+      },
+    },
+    include: {
+      donation: true,
+      items: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+};

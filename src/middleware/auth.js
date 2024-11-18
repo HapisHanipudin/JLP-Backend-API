@@ -26,6 +26,7 @@ const authMiddleware = async (req, res, next) => {
     { method: "GET", endpoint: "/order" },
     { method: "GET", endpoint: "/order/:status" },
     { method: "GET", endpoint: "/order/track" },
+    { method: "GET", endpoint: "/order/history" },
     { method: "PUT", endpoint: "/order/item/:id" },
   ];
 
