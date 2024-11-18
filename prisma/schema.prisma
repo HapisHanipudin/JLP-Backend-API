@@ -65,8 +65,8 @@ model Vendor {
   donations    Donation[]
   incomes      Income[]
   products     Product[]
-  percentageVendor    Float  @default(0.01)
-  percentagePalestine Float @default(0.99)
+  percentageVendor    Float  @default(0.99)
+  percentagePalestine Float @default(0.01)
   reviews      Reviews[]
   User         User[]
   category     Category       @relation(fields: [categoryId], references: [id])
