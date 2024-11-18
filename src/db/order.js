@@ -106,6 +106,9 @@ export const trackOrderItems = async (userId) => {
       order: {
         userId,
       },
+      status: {
+        notIn: ["CANCELLED", "COMPLETED"],
+      },
     },
     include: {
       order: {
